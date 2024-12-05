@@ -5,7 +5,10 @@ we will be storing two things in the blockchain
   -  World State ( Current State: what do we "have" now )
   -  Transaaction Log ( History: everything that happend before )
       -  this data is synced between peers ( whenever a peer updated his ledger, the other peers need to add that transaction to their ledger )
-      -  for now wa9ila a big wa9ila this done by CFT ( Crash Fault Tolerance )
+   
+## CTF: Crash Fault Tolerance
+guaranties to withstand system failures, such as crashes, network partitioning. 
+  -  **HyberLedger Fabric** uses **Kafka** for that
   
 ## PEER: a user in the network
 a user needs to be "certified" ot get identified as a peer ( something to prove that u are who u saying u are , b7al carte nationale / passport )
@@ -19,8 +22,13 @@ it will be the one to "certify" the peers ( make them valid/trusted users )
 
 ## SMART CONTRACT == CHAINCODE
 with it we can initiate a transaction
-  -  They are the ones who update the peer's ledger
 
 ## MEMBERSHIP SERVICE PROVIDER
 specifies which peers are allowed to be a part of the network and which aren't ( so getting a certificate from a CA [Certificate Authority] doesnt necessary mean u are a part of the network)
 it also specefied the rules of a network
+
+## Block
+a block is a transaction, so every transaction that's being done == a block needs to be add to the ledger
+
+## Orderer Peer: ( Writer )
+It's the one that writes/add blocks to the peer's ledgers
