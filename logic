@@ -1,0 +1,15 @@
+after setting up the network.
+
+we will make transactions
+a transaction is a transfer of an asset
+
+produit ? in our tp ?? 
+
+CHAINCODE
+
+asset
+// anyways we will have to change the assrt to match what we will be transferring 
+
+
+assetTransfer
+// initialise a Ledger, but in our example we use InitLedger to initiate a ledger with history "mock data"
