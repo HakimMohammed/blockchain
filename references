@@ -19,3 +19,15 @@ https://github.com/hyperledger/fabric-samples/tree/main
 
 # Starting Guide
 https://www.youtube.com/watch?v=rwKPXHUlmks
+
+# Descripton:
+what we will do is creating a private blockchain network
+Private Blockchain Newtwork : a normal blockchain network ( public ) is a tool/system to ensure confidentialtiy/security/tracability of transactions ( e.g: ETH ) , but it's still a PUBLIC network so anyone outside the netwrok will be able to access those transactions, and apply transactions themsleves. the use of a private blockchain network is like the public one with the addition of restricted access to only those who are allowed ( have an identity inside the network ) ( e.g: a company want to ensure it's stock security, it will setup a private network and only it's employees can access the blockchain).
+
+# Provider
+HyperLedger Fabric
+
+# Stored Data
+we will be storing two things in the blockchain
+.  World State ( Current State: what do we "have" now )
+.  Transaaction Log ( History: everything that happend before )
