@@ -96,13 +96,13 @@ function createOrgs() {
 
     #Supplier A
     infoln "Creating Supplier A Identities"
-    peer_cert peer supplier_A_peer.supplier_A.enset.com supplier_A
-    peer_cert admin Admin@supplier_A.enset.com supplier_A
+    peer_cert peer supplierA_peer.supplier_A.enset.com supplier_A
+    peer_cert admin Admin@suppliera.enset.com supplier_A
 
     #Supplier B
     infoln "Creating Supplier B Identities"
-    peer_cert peer supplier_B_peer.supplier_B.enset.com supplier_B
-    peer_cert admin Admin@supplier_B.enset.com supplier_B
+    peer_cert peer supplierB_peer.supplier_B.enset.com supplier_B
+    peer_cert admin Admin@supplierb.enset.com supplier_B
 
     #Orderer
     infoln "Creating Orderer Identities"

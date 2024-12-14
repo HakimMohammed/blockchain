@@ -1,6 +1,6 @@
 PeerOrgs:
-  - Name: Supplier_B
-    Domain: supplier_B.enset.com
+  - Name: SupplierB
+    Domain: supplierb.enset.com
     EnableNodeOUs: true
 
     Template:
