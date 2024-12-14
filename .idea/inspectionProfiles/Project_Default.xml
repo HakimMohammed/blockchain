@@ -9,15 +9,18 @@
       <option name="ignoredModules">
         <list>
           <option value="server" />
+          <option value="backend" />
         </list>
       </option>
       <option name="ignoredPackages">
         <list>
           <option value="org.eclipse.jetty:jetty-server:11.0.15" />
+          <option value="org.springframework:spring-webmvc:6.2.0" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
         </list>
       </option>

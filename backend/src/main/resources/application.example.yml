@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: backend
+  datasource:
+    driver-class-name:
+    url:
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto:
+    show-sql:
+    properties:
+      hibernate:
+        dialect:
+    database:
+
+
+
