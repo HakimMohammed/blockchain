@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import atlantafx.base.controls.Card?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<HBox fx:id="loginContainer" styleClass="login-container"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.inventory.ui.controllers.LoginController">
+
+    <!-- Left Side - Illustration -->
+    <VBox styleClass="illustration-container" HBox.hgrow="ALWAYS">
+        <ImageView fitWidth="400" preserveRatio="true" styleClass="illustration">
+            <Image url="@../assets/images/app-logo.png"/>
+        </ImageView>
+    </VBox>
+
+    <!-- Right Side - Login Form -->
+    <VBox styleClass="login-form-container" HBox.hgrow="ALWAYS">
+        <Card styleClass="login-card">
+            <body>
+                <VBox spacing="25" alignment="CENTER" styleClass="card-content">
+                    <!-- Logo -->
+                    <ImageView fitWidth="100" preserveRatio="true" styleClass="logo">
+                        <Image url="@../assets/images/app-logo.png"/>
+                    </ImageView>
+
+                    <!-- Welcome Text -->
+                    <VBox spacing="5" alignment="CENTER">
+                        <Label text="Hello Again!" styleClass="welcome-text"/>
+                        <Label text="Welcome back, please enter your details"
+                               styleClass="welcome-subtitle"/>
+                    </VBox>
+
+                    <!-- Status Label -->
+                    <Label fx:id="statusLabel" styleClass="status-label" managed="false" visible="false"/>
+
+                    <!-- Login Form -->
+                    <VBox spacing="15">
+                        <TextField fx:id="usernameField"
+                                   promptText="Email"
+                                   styleClass="input-field"/>
+
+                        <PasswordField fx:id="passwordField"
+                                       promptText="Password"
+                                       styleClass="input-field"/>
+
+                        <Button fx:id="loginButton"
+                                text="Login"
+                                styleClass="login-button"/>
+                    </VBox>
+                </VBox>
+            </body>
+        </Card>
+    </VBox>
+</HBox>

@@ -2,7 +2,15 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/fabric/fabric-samples/asset-transfer-basic/chaincode-java/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/fabric/fabric-samples/asset-transfer-basic/chaincode-java/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/fabric/fabric-samples/asset-transfer-basic/chaincode-java/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fabric/fabric-samples/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/fabric/fabric-samples/builders" />
+      <excludeFolder url="file://$MODULE_DIR$/fabric/fabric-samples/config" />
+      <excludeFolder url="file://$MODULE_DIR$/ui/target" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
