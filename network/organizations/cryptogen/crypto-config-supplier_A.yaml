@@ -1,0 +1,11 @@
+PeerOrgs:
+  - Name: Supplier_A
+    Domain: supplier_A.enset
+    EnableNodeOUs: true
+
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+    Users:
+      Count: 1

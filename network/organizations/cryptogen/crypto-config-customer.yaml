@@ -1,0 +1,11 @@
+PeerOrgs:
+  - Name: Customer
+    Domain: customer.enset
+    EnableNodeOUs: true
+
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+    Users:
+      Count: 1
