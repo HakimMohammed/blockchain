@@ -12,27 +12,52 @@ function createOrgs() {
     fi
     infoln "Generating certificates using cryptogen tool"
 
-    infoln "Creating Org1 Identities"
+    #Company
+    infoln "Creating Company Identities"
 
     set -x
-    cryptogen generate --config=./organizations/cryptogen/crypto-config-org1.yaml --output="organizations"
+    cryptogen generate --config=./organizations/cryptogen/crypto-config-company.yaml --output="organizations"
     res=$?
     { set +x; } 2>/dev/null
     if [ $res -ne 0 ]; then
       fatalln "Failed to generate certificates..."
     fi
 
-    infoln "Creating Org2 Identities"
+    #Customer
+    infoln "Creating Customer Identities"
 
     set -x
-    cryptogen generate --config=./organizations/cryptogen/crypto-config-org2.yaml --output="organizations"
+    cryptogen generate --config=./organizations/cryptogen/crypto-config-customer.yaml --output="organizations"
     res=$?
     { set +x; } 2>/dev/null
     if [ $res -ne 0 ]; then
       fatalln "Failed to generate certificates..."
     fi
 
-    infoln "Creating Orderer Org Identities"
+    #Supplier A
+    infoln "Creating Supplier A Identities"
+
+    set -x
+    cryptogen generate --config=./organizations/cryptogen/crypto-config-supplier_A.yaml --output="organizations"
+    res=$?
+    { set +x; } 2>/dev/null
+    if [ $res -ne 0 ]; then
+      fatalln "Failed to generate certificates..."
+    fi
+
+    #Supplier B
+    infoln "Creating Supplier B Identities"
+
+    set -x
+    cryptogen generate --config=./organizations/cryptogen/crypto-config-supplier_B.yaml --output="organizations"
+    res=$?
+    { set +x; } 2>/dev/null
+    if [ $res -ne 0 ]; then
+      fatalln "Failed to generate certificates..."
+    fi
+
+    #Orderer
+    infoln "Creating Orderer Identities"
 
     set -x
     cryptogen generate --config=./organizations/cryptogen/crypto-config-orderer.yaml --output="organizations"
@@ -48,19 +73,41 @@ function createOrgs() {
   if [ "$CRYPTO" == "cfssl" ]; then
 
     . organizations/cfssl/registerEnroll.sh
+    # example of how to use the registerEnroll.sh script
     #function_name cert-type   CN   org
-    peer_cert peer peer0.org1.example.com org1
-    peer_cert admin Admin@org1.example.com org1
+    
+    #peer_cert peer peer0.org1.example.com org1
+    #peer_cert admin Admin@org1.example.com org1
 
-    infoln "Creating Org2 Identities"
-    #function_name cert-type   CN   org
-    peer_cert peer peer0.org2.example.com org2
-    peer_cert admin Admin@org2.example.com org2
+    #orderer_cert orderer orderer.example.com
+    #orderer_cert admin Admin@example.com
 
-    infoln "Creating Orderer Org Identities"
-    #function_name cert-type   CN   
-    orderer_cert orderer orderer.example.com
-    orderer_cert admin Admin@example.com
+    infoln "Generating certificates using cfssl"
+
+    #Company
+    infoln "Creating Company Identities"
+    peer_cert peer company_peer.company.enset.com company
+    peer_cert admin Admin@company.enset.com company
+
+    #Customer
+    infoln "Creating Customer Identities"
+    peer_cert peer customer_peer.customer.enset.com customer
+    peer_cert admin Admin@customer.enset.com customer
+
+    #Supplier A
+    infoln "Creating Supplier A Identities"
+    peer_cert peer supplier_A_peer.supplier_A.enset.com supplier_A
+    peer_cert admin Admin@supplier_A.enset.com supplier_A
+
+    #Supplier B
+    infoln "Creating Supplier B Identities"
+    peer_cert peer supplier_B_peer.supplier_B.enset.com supplier_B
+    peer_cert admin Admin@supplier_B.enset.com supplier_B
+
+    #Orderer
+    infoln "Creating Orderer Identities"
+    orderer_cert orderer orderer.enset.com
+    orderer_cert admin Admin@enset.com
 
   fi 
 

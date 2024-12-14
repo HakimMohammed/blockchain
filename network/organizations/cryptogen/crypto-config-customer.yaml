@@ -1,6 +1,6 @@
 PeerOrgs:
   - Name: Customer
-    Domain: customer.enset
+    Domain: enset.com
     EnableNodeOUs: true
 
     Template:
