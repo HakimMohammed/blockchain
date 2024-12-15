@@ -291,6 +291,38 @@ function networkUp() {
   fi
 }
 
+
+function createChannel() {
+  # Bring up the network if it is not already up.
+  bringUpNetwork="false"
+
+  local bft_true=$1
+
+  if ! $CONTAINER_CLI info > /dev/null 2>&1 ; then
+    fatalln "$CONTAINER_CLI network is required to be running to create a channel"
+  fi
+
+  # check if all containers are present
+  CONTAINERS=($($CONTAINER_CLI ps | grep hyperledger/ | awk '{print $2}'))
+  len=$(echo ${#CONTAINERS[@]})
+
+  if [[ $len -ge 4 ]] && [[ ! -d "organizations/peerOrganizations" ]]; then
+    echo "Bringing network down to sync certs with containers"
+    networkDown
+  fi
+
+  [[ $len -lt 4 ]] || [[ ! -d "organizations/peerOrganizations" ]] && bringUpNetwork="true" || echo "Network Running Already"
+
+  if [ $bringUpNetwork == "true"  ]; then
+    infoln "Bringing up network"
+    networkUp
+  fi
+
+  # now run the script that creates a channel. This script uses configtxgen once
+  # to create the channel creation transaction and the anchor peer updates.
+  scripts/createChannel.sh $CHANNEL_NAME $ORGS $CLI_DELAY $MAX_RETRY $VERBOSE $bft_true
+}
+
 # Tear down running network
 function networkDown() {
   local temp_compose=$COMPOSE_FILE_BASE
@@ -466,9 +498,13 @@ while [[ $# -ge 1 ]] ; do
   -verbose )
     VERBOSE=true
     ;;
+  # updated to take multiple orgs as arguments
   -org )
-    ORG="$2"
-    shift
+    ORGS=()
+    while [[ "$2" && "$2" != -* ]]; do
+        ORGS+=("$2")
+        shift
+    done
     ;;
   -i )
     IMAGETAG="$2"
