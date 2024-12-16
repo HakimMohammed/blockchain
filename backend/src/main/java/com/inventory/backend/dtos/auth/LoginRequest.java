@@ -1,11 +1,14 @@
 package com.inventory.backend.dtos.auth;
 
-import lombok.Data;
+import lombok.*;
 
-// DTOs (Data Transfer Objects)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Data
 public class LoginRequest {
     private String email;
     private String password;
-    // Getters and setters
 }

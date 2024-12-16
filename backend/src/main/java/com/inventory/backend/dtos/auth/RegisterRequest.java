@@ -1,11 +1,15 @@
 package com.inventory.backend.dtos.auth;
 
 import com.inventory.backend.enums.UserRole;
-import lombok.Data;
+import lombok.*;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class RegisterRequest {
     private String firstName;
     private String lastName;
@@ -13,5 +17,4 @@ public class RegisterRequest {
     private String password;
     private UserRole role;
     private UUID organizationId;
-    // Getters and setters
 }
