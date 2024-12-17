@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.opentelemetry:opentelemetry-extension-trace-propagators:1.42.1" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.opentelemetry" artifactId="opentelemetry-extension-trace-propagators" version="1.42.1" baseVersion="1.42.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opentelemetry/opentelemetry-extension-trace-propagators/1.42.1/f1516556789c3b0d2fd1a6fee4321ef68ec43f1e/opentelemetry-extension-trace-propagators-1.42.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
