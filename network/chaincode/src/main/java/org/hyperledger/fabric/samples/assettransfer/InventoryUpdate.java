@@ -2,16 +2,14 @@ package org.hyperledger.fabric.samples.assettransfer;
 
 import com.owlike.genson.Genson;
 import org.hyperledger.fabric.contract.Context;
+import org.hyperledger.fabric.contract.ContractInterface;
 import org.hyperledger.fabric.contract.annotation.*;
 import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Contract(
         name = "basic",
@@ -27,7 +25,7 @@ import java.util.Map;
                         name = "Three Clowns",
                         url = "https://threeclowns.enset.com")))
 @Default
-public class InventoryUpdate {
+public class InventoryUpdate implements ContractInterface {
     private final Genson genson = new Genson();
 
     private enum InventoryUpdateErrors {
@@ -54,7 +52,7 @@ public class InventoryUpdate {
     }
 
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public Inventory createInventory(final Context ctx, final String inventory_id, final String organization) {
+    public Inventory CreateInventory(final Context ctx, final String inventory_id, final String organization, final Map<String, Integer> inventory) {
 
         if (InventoryExists(ctx, inventory_id)) {
             String errorMessage = String.format("Inventory %s already exists", inventory_id);
@@ -62,7 +60,7 @@ public class InventoryUpdate {
             throw new ChaincodeException(errorMessage, InventoryUpdateErrors.INVENTORY_ALREADY_EXISTS.toString());
         }
 
-        return putInventory(ctx, new Inventory(inventory_id, organization, new HashMap<>()));
+        return putInventory(ctx, new Inventory(inventory_id, organization, inventory));
     }
 
     private Inventory putInventory(final Context ctx, final Inventory inventory) {
@@ -124,19 +122,22 @@ public class InventoryUpdate {
     }
 
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public String getAllInventories(final Context ctx) {
+    public String GetAllInventories(final Context ctx) {
         ChaincodeStub stub = ctx.getStub();
-
-        List<Inventory> queryResults = new ArrayList<>();
+        List<Map<String, Object>> formattedInventoryList = new ArrayList<>();
 
         QueryResultsIterator<KeyValue> results = stub.getStateByRange("", "");
-
         for (KeyValue result: results) {
             Inventory inventory = genson.deserialize(result.getStringValue(), Inventory.class);
-            System.out.println(inventory);
-            queryResults.add(inventory);
+
+            // Custom formatting
+            Map<String, Object> formattedInventory = new LinkedHashMap<>();
+            formattedInventory.put(inventory.getInventory_id(), inventory);
+
+            formattedInventoryList.add(formattedInventory);
         }
 
-        return genson.serialize(queryResults);
+        return genson.serialize(formattedInventoryList);
     }
+
 }
