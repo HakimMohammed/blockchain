@@ -1,11 +1,11 @@
 package com.inventory.ui;
 
-import atlantafx.base.theme.PrimerLight;
+import com.inventory.ui.services.LoaderService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.util.Objects;
 
@@ -13,19 +13,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        try {
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("views/login-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles/auth.css")).toExternalForm());
-
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons/app-icon-32.png"))));
+        LoaderService.loadLoginPage(stage);
     }
 
     public static void main(String[] args) {
