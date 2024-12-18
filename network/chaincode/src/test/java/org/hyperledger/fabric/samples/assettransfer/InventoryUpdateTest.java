@@ -48,11 +48,11 @@ public final class InventoryUpdateTest {
             inventoryList = new ArrayList<KeyValue>();
 
             inventoryList.add(new MockKeyValue("inventory1",
-                    "{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"inventory\":{\"product1\":5,\"product2\":10}}"));
+                    "{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"stock\":{\"product1\":5,\"product2\":10}}"));
             inventoryList.add(new MockKeyValue("inventory2",
-                    "{\"inventory_id\":\"inventory2\",\"organization\":\"organization2\",\"inventory\":{\"product3\":15,\"product4\":20}}"));
+                    "{\"inventory_id\":\"inventory2\",\"organization\":\"organization2\",\"stock\":{\"product3\":15,\"product4\":20}}"));
             inventoryList.add(new MockKeyValue("inventory3",
-                    "{\"inventory_id\":\"inventory3\",\"organization\":\"organization3\",\"inventory\":{\"product5\":25,\"product6\":30}}"));
+                    "{\"inventory_id\":\"inventory3\",\"organization\":\"organization3\",\"stock\":{\"product5\":25,\"product6\":30}}"));
         }
 
         @Override
@@ -90,7 +90,7 @@ public final class InventoryUpdateTest {
             ChaincodeStub stub = mock(ChaincodeStub.class);
             when(ctx.getStub()).thenReturn(stub);
             when(stub.getStringState("inventory1"))
-                    .thenReturn("{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"inventory\":{\"product1\":5,\"product2\":10}}");
+                    .thenReturn("{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"stock\":{\"product1\":5,\"product2\":10}}");
 
             Inventory inventory = contract.ReadInventory(ctx, "inventory1");
 
@@ -111,7 +111,7 @@ public final class InventoryUpdateTest {
 
             assertThat(thrown).isInstanceOf(ChaincodeException.class).hasNoCause()
                     .hasMessage("Inventory inventory1 does not exist");
-            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_NOT_FOUND");
+            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_NOT_FOUND".getBytes());
         }
     }
 
@@ -125,9 +125,27 @@ public final class InventoryUpdateTest {
         contract.InitLedger(ctx);
 
         InOrder inOrder = inOrder(stub);
-        inOrder.verify(stub).putStringState("inventory1", "{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"inventory\":{\"product1\":5,\"product2\":10}}");
-        inOrder.verify(stub).putStringState("inventory2", "{\"inventory_id\":\"inventory2\",\"organization\":\"organization2\",\"inventory\":{\"product1\":50,\"product2\":100}}");
-        inOrder.verify(stub).putStringState("inventory3", "{\"inventory_id\":\"inventory3\",\"organization\":\"organization3\",\"inventory\":{\"product1\":25,\"product2\":50}}");
+        inOrder.verify(stub).putStringState("6aa24120-3e9f-470b-8608-86f17290a7cc",
+                "{\"inventory_id\":\"6aa24120-3e9f-470b-8608-86f17290a7cc\"," +
+                "\"organization\":\"b34eaf92-94f7-4ec2-ab45-db6ebcf677e4\"," +
+                "\"stock\":{\"" +
+                        "357b8612-90d9-4d0e-8803-1c741bb46c74\":200," +
+                        "\"7363a89d-d069-47b7-951c-d3885de6b473\":100" +
+                        "}}");
+        inOrder.verify(stub).putStringState("792094e2-7b15-46d2-9881-c6774f8b2bbc",
+                "{\"inventory_id\":\"792094e2-7b15-46d2-9881-c6774f8b2bbc\"," +
+                        "\"organization\":\"a5639fda-7a58-4c73-a6d9-3efc1788336e\"," +
+                        "\"stock\":{\"" +
+                        "357b8612-90d9-4d0e-8803-1c741bb46c74\":250," +
+                        "\"7363a89d-d069-47b7-951c-d3885de6b473\":50" +
+                        "}}");
+        inOrder.verify(stub).putStringState("88924827-51b9-43ec-99b8-d57aed2bd858",
+                "{\"inventory_id\":\"88924827-51b9-43ec-99b8-d57aed2bd858\"," +
+                        "\"organization\":\"f5444085-158b-4a93-80a8-d724a72983ba\"," +
+                        "\"stock\":{\"" +
+                        "357b8612-90d9-4d0e-8803-1c741bb46c74\":400," +
+                        "\"7363a89d-d069-47b7-951c-d3885de6b473\":300" +
+                        "}}");
     }
 
     @Nested
@@ -148,7 +166,7 @@ public final class InventoryUpdateTest {
 
             assertThat(thrown).isInstanceOf(ChaincodeException.class).hasNoCause()
                     .hasMessage("Inventory inventory1 already exists");
-            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_ALREADY_EXISTS");
+            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_ALREADY_EXISTS".getBytes());
         }
 
         @Test
@@ -176,9 +194,9 @@ public final class InventoryUpdateTest {
         String inventories = contract.GetAllInventories(ctx);
 
         assertThat(inventories).isEqualTo("[" +
-                "{\"inventory1\",\"{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"inventory\":{\"product1\":5,\"product2\":10}}}}," +
-                "{\"inventory2\",\"{\"inventory_id\":\"inventory2\",\"organization\":\"organization2\",\"inventory\":{\"product3\":15,\"product4\":20}}}," +
-                "{\"inventory3\",\"{\"inventory_id\":\"inventory3\",\"organization\":\"organization3\",\"inventory\":{\"product5\":25,\"product6\":30}}}]");
+                "{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"stock\":{\"product2\":10,\"product1\":5}}," +
+                "{\"inventory_id\":\"inventory2\",\"organization\":\"organization2\",\"stock\":{\"product4\":20,\"product3\":15}}," +
+                "{\"inventory_id\":\"inventory3\",\"organization\":\"organization3\",\"stock\":{\"product6\":30,\"product5\":25}}]");
     }
 
     @Nested
@@ -191,7 +209,7 @@ public final class InventoryUpdateTest {
             ChaincodeStub stub = mock(ChaincodeStub.class);
             when(ctx.getStub()).thenReturn(stub);
             when(stub.getStringState("inventory1"))
-                    .thenReturn("{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"inventory\":{\"product1\":5,\"product2\":10}}");
+                    .thenReturn("{\"inventory_id\":\"inventory1\",\"organization\":\"organization1\",\"stock\":{\"product1\":5,\"product2\":10}}");
 
             Inventory inventory = contract.UpdateInventory(ctx, "inventory1", "product1", 5, "RECIEVE");
 
@@ -212,7 +230,7 @@ public final class InventoryUpdateTest {
 
             assertThat(thrown).isInstanceOf(ChaincodeException.class).hasNoCause()
                     .hasMessage("Inventory inventory1 does not exist");
-            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_NOT_FOUND");
+            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_NOT_FOUND".getBytes());
         }
     }
 
@@ -233,7 +251,7 @@ public final class InventoryUpdateTest {
 
             assertThat(thrown).isInstanceOf(ChaincodeException.class).hasNoCause()
                     .hasMessage("Inventory inventory1 does not exist");
-            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_NOT_FOUND");
+            assertThat(((ChaincodeException) thrown).getPayload()).isEqualTo("INVENTORY_NOT_FOUND".getBytes());
         }
     }
 

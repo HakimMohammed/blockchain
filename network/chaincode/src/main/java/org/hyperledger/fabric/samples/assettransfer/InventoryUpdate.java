@@ -93,7 +93,7 @@ public class InventoryUpdate implements ContractInterface {
         }
 
         Inventory inventory = ReadInventory(ctx, inventory_id);
-        HashMap<String, Integer> inventoryMap = new HashMap<>(inventory.getInventory());
+        LinkedHashMap<String, Integer> inventoryMap = new LinkedHashMap<>(inventory.getStock());
         if( transaction_type.equals("RECIEVE") ) {
             inventoryMap.put(product_id, inventoryMap.getOrDefault(product_id, 0) + quantity);
         }
@@ -124,20 +124,16 @@ public class InventoryUpdate implements ContractInterface {
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String GetAllInventories(final Context ctx) {
         ChaincodeStub stub = ctx.getStub();
-        List<Map<String, Object>> formattedInventoryList = new ArrayList<>();
-
+        List<Inventory> queryResults = new ArrayList<>();
         QueryResultsIterator<KeyValue> results = stub.getStateByRange("", "");
+
         for (KeyValue result: results) {
             Inventory inventory = genson.deserialize(result.getStringValue(), Inventory.class);
-
-            // Custom formatting
-            Map<String, Object> formattedInventory = new LinkedHashMap<>();
-            formattedInventory.put(inventory.getInventory_id(), inventory);
-
-            formattedInventoryList.add(formattedInventory);
+            System.out.println(inventory);
+            queryResults.add(inventory);
         }
 
-        return genson.serialize(formattedInventoryList);
+        return genson.serialize(queryResults);
     }
 
 }
