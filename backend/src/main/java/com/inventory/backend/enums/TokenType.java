@@ -1,6 +1,5 @@
 package com.inventory.backend.enums;
 
-public enum UserRole {
-    MANAGER,
+public enum TokenType {
+    BEARER
 }
-

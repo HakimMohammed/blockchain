@@ -1,6 +1,7 @@
 package com.inventory.backend.dtos.auth;
 
-import com.inventory.backend.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.inventory.backend.enums.Role;
 import lombok.*;
 
 import java.util.UUID;
@@ -10,8 +11,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class LoginResponse {
-    private String token;
-    private UUID userId;
-    private UserRole role;
+    @JsonProperty("access_token")
+    private String accessToken;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 }

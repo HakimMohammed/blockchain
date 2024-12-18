@@ -13,5 +13,6 @@ spring:
     database: mysql
   jwt :
     secret: dWlQozT9bv2rY0AnVlKMt84FfFnX5MnWJIUCpmg7PZM=
+    refresh_token_expiration : 86400000 # 1 day
     expiration: 86400000 # 1 day
 

@@ -1,6 +1,6 @@
 package com.inventory.backend.dtos.user;
 
-import com.inventory.backend.enums.UserRole;
+import com.inventory.backend.enums.Role;
 import lombok.*;
 
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class UserResponse {
 
     private String email;
 
-    private UserRole role;
+    private Role role;
 
     private String organizationName;
 }

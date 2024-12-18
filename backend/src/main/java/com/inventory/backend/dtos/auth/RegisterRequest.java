@@ -1,6 +1,6 @@
 package com.inventory.backend.dtos.auth;
 
-import com.inventory.backend.enums.UserRole;
+import com.inventory.backend.enums.Role;
 import lombok.*;
 
 import java.util.UUID;
@@ -15,6 +15,6 @@ public class RegisterRequest {
     private String lastName;
     private String email;
     private String password;
-    private UserRole role;
+    private Role role;
     private UUID organizationId;
 }
