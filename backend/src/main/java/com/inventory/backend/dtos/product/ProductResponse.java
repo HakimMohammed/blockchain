@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.util.UUID;
 
+import com.inventory.backend.entities.Organization;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,7 +29,5 @@ public class ProductResponse {
 
     private String categoryName;
 
-    private UUID organizationId;
-
-    private String organizationName;
+    private Organization organization;
 }

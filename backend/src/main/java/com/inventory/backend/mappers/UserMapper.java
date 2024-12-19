@@ -57,7 +57,7 @@ public class UserMapper {
                 user.getLastName(),
                 user.getEmail(),
                 user.getRole(),
-                user.getOrganization() != null ? user.getOrganization().getName() : null
+                user.getOrganization() != null ? user.getOrganization() : null
         );
     }
 

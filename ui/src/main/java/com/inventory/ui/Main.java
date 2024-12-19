@@ -1,9 +1,7 @@
 package com.inventory.ui;
 
-import com.inventory.ui.services.LoaderService;
+import com.inventory.ui.services.UILoaderService;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -13,8 +11,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+        UILoaderService uiLoaderService = new UILoaderService();
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons/app-icon-32.png"))));
-        LoaderService.loadLoginPage(stage);
+        uiLoaderService.loadLoginPage(stage);
     }
 
     public static void main(String[] args) {

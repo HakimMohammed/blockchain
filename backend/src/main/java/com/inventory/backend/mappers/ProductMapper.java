@@ -68,8 +68,7 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
                 product.getImage(),
                 product.getCategory() != null ? product.getCategory().getId() : null,
                 product.getCategory() != null ? product.getCategory().getName() : null,
-                product.getOrganization() != null ? product.getOrganization().getId() : null,
-                product.getOrganization() != null ? product.getOrganization().getName() : null
+                product.getOrganization() != null ? product.getOrganization() : null
         );
     }
 

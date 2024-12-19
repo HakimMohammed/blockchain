@@ -1,5 +1,6 @@
 package com.inventory.backend.dtos.user;
 
+import com.inventory.backend.entities.Organization;
 import com.inventory.backend.enums.Role;
 import lombok.*;
 
@@ -22,5 +23,5 @@ public class UserResponse {
 
     private Role role;
 
-    private String organizationName;
+    private Organization organization;
 }

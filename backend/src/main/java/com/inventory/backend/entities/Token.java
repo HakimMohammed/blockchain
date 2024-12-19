@@ -1,5 +1,7 @@
 package com.inventory.backend.entities;
 
+import java.util.UUID;
+
 import com.inventory.backend.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,13 +18,14 @@ import lombok.*;
 public class Token {
 
     @Id
-    @GeneratedValue
-    public Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    public UUID id;
 
     @Column(unique = true)
     public String token;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     public TokenType tokenType = TokenType.BEARER;
 
     public boolean revoked;
