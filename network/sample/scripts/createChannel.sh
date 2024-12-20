@@ -29,28 +29,22 @@ if [ ! -d "channel-artifacts" ]; then
 fi
 
 createChannelGenesisBlock() {
-  for ORG in "${ORGS[@]}"; do
-    setGlobals "$ORG"
-    which configtxgen
-    if [ "$?" -ne 0 ]; then
-      fatalln "configtxgen tool not found."
-    fi
-    # local bft_true=$1
-	# echo "BFT TRUE VALUE ${bft_true}"
-    # set -x
+  setGlobals "company"
+	which configtxgen
+	if [ "$?" -ne 0 ]; then
+		fatalln "configtxgen tool not found."
+	fi
+	local bft_true=$1
+	set -x
 
-    # if [ $bft_true -eq 1 ]; then
-    #   configtxgen -profile ChannelUsingBFT -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
-    # else
-    #   configtxgen -profile ChannelUsingRaft -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
-    # fi
-
-	configtxgen -profile ChannelUsingBFT -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
-
-    res=$?
-    { set +x; } 2>/dev/null
-    verifyResult $res "Failed to generate channel configuration transaction..."
-  done
+	if [ "$bft_true" = "company" ]; then
+		configtxgen -profile ChannelUsingBFT -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
+	else
+		configtxgen -profile ChannelUsingRaft -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
+	fi
+	res=$?
+	{ set +x; } 2>/dev/null
+  verifyResult $res "Failed to generate channel configuration transaction..."
 }
 
 createChannel() {
@@ -148,18 +142,18 @@ createChannelGenesisBlock $BFT
 # 3. C3 - company, customer
 
 
-infoln "Creating Channel ${CHANNEL_NAME}"
+infoln "Creating channel ${CHANNEL_NAME}"
 createChannel $BFT
 successln "Channel '$CHANNEL_NAME' created"
 
-# ## Join the peers to the channel
-for ORG in "${ORGS[@]}"; do
-  infoln "Joining ${ORG}_peer.${ORG} to the channel..."
-  joinChannel $ORG
-done
+infoln "Joining company peer to the channel..."
+joinChannel company
+infoln "Joining suppliera peer to the channel..."
+joinChannel suppliera
 
-# ## Set the anchor peers for each org in the channel
-for ORG in "${ORGS[@]}"; do
-  infoln "Setting anchor peer for ${ORG}_peer.${ORG}..."
-  setAnchorPeer $ORG
-done
+infoln "Setting anchor peer for company..."
+setAnchorPeer company
+infoln "Setting anchor peer for suppliera..."
+setAnchorPeer suppliera
+
+successln "Channel '$CHANNEL_NAME' joined"
