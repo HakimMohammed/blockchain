@@ -41,7 +41,9 @@ docker ps -a
 
 # Set the path for peer binary and config for core.yaml
 export PATH=${PWD}/../bin:$PATH
+// for the hlf2 network :  export PATH=${PWD}/bin:$PATH
 export FABRIC_CFG_PATH=$PWD/../config/
+// for the hlf2 network :  export FABRIC_CFG_PATH=$PWD/config/
 
 # Set the environment variables to operate Peer as Org1
 export CORE_PEER_TLS_ENABLED=true
