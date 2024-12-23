@@ -1,5 +1,6 @@
 package com.inventory.ui.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.UUID;
@@ -8,6 +9,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
     private UUID id;
     private String name;

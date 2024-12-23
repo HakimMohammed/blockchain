@@ -12,7 +12,10 @@ module com.inventory.ui {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.feather;
 
-    opens com.inventory.ui.models to javafx.base;
+    opens com.inventory.ui.models to javafx.base, com.fasterxml.jackson.databind;
+    exports com.inventory.ui.enums to com.fasterxml.jackson.databind;
+    exports com.inventory.ui.models to com.fasterxml.jackson.databind;
+    opens com.inventory.ui to javafx.base;
     opens com.inventory.ui.controllers to javafx.fxml;
     exports com.inventory.ui;
     exports com.inventory.ui.dtos to com.fasterxml.jackson.databind;

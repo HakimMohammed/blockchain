@@ -1,5 +1,7 @@
 package com.inventory.backend.dtos.product;
 
+import com.inventory.backend.dtos.category.CategoryResponse;
+import com.inventory.backend.entities.Category;
 import lombok.*;
 
 import java.util.UUID;
@@ -25,9 +27,7 @@ public class ProductResponse {
 
     private String image;
 
-    private UUID categoryId;
-
-    private String categoryName;
+    private CategoryResponse category;
 
     private Organization organization;
 }

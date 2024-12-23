@@ -21,6 +21,7 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
 
     private final CategoryService categoryService;
     private final OrganizationService organizationService;
+    private final CategoryMapper categoryMapper;
 
 
     public Product toEntity(CreateProductRequest request) {
@@ -66,8 +67,7 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
                 product.getPrice(),
                 product.getQuantity(),
                 product.getImage(),
-                product.getCategory() != null ? product.getCategory().getId() : null,
-                product.getCategory() != null ? product.getCategory().getName() : null,
+                product.getCategory() != null ? categoryMapper.toResponse(product.getCategory()) : null,
                 product.getOrganization() != null ? product.getOrganization() : null
         );
     }

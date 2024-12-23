@@ -1,20 +1,27 @@
 package com.inventory.ui.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
 public class Category {
-    private UUID id;
 
-    private String name;
+    private final UUID id;
+    private final String name;
+    private final String description;
 
-    private String description;
-
-    private List<Product> products;
+    @JsonCreator
+    public Category(
+            @JsonProperty("id") UUID id,
+            @JsonProperty("name") String name,
+            @JsonProperty("description") String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
 }
