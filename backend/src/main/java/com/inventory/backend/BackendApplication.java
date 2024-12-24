@@ -6,6 +6,7 @@ import com.inventory.backend.entities.Organization;
 import com.inventory.backend.entities.Product;
 import com.inventory.backend.entities.User;
 import com.inventory.backend.enums.OrganizationType;
+import com.inventory.backend.enums.UserRole;
 import com.inventory.backend.metier.BlockchainMetierImpl;
 import com.inventory.backend.services.CategoryService;
 import com.inventory.backend.services.OrganizationService;
