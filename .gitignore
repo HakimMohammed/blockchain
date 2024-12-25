@@ -6,5 +6,15 @@ ui
 Overview
 MINIFABRIC.md
 README.md
-network/blockchain/java/stock/.gradle
-network/blockchain/java/stock/.idea
+
+# Network Directory
+**/.gradle/
+**/.idea/
+network/bin/
+network/builders/
+network/channel-artifacts/
+network/config/
+network/organizations/ordererOrganizations/
+network/organizations/peerOrganizations/
+network/stock.tar.gz
+network/system-genesis-block/genesis.block
