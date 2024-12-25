@@ -23,18 +23,4 @@ public class BackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(BackendApplication.class, args);
     }
-
-    @Bean
-    public CommandLineRunner testBlockchain() {
-        return args -> {
-            System.out.println("Test blockchain");
-            BlockchainMetierImpl metier = new BlockchainMetierImpl();
-            BlockchainController controller = new BlockchainController(metier);
-            System.out.println("Init ledger");
-            controller.initLedger();
-            System.out.println("Get exchanges by organization");
-            System.out.println(controller.getExchangesByOrganization("Company"));
-        };
-    }
-
 }
