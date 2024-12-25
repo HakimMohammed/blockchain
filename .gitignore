@@ -8,6 +8,7 @@ MINIFABRIC.md
 README.md
 
 # Network Directory
+**/build/
 **/.gradle/
 **/.idea/
 network/bin/
