@@ -9,6 +9,8 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Contract(
@@ -41,17 +43,19 @@ public final class StockRepository implements ContractInterface {
     public void initLedger(final Context ctx) {
         putInventory(ctx, new Inventory("supplier1", "supplier1", new LinkedHashMap<>(Map.of("product1", 500, "product3", 800))));
         putInventory(ctx, new Inventory("supplier2", "supplier2", new LinkedHashMap<>(Map.of("product2", 800, "product4", 900))));
-        putExchange(ctx, new Exchange("exchange1", "product1", "supplier1", 100, new Date().toString(), TransactionType.SEND));
-        putExchange(ctx, new Exchange("exchange2", "product1", "company", 100, new Date().toString(), TransactionType.RECEIVE));
-        putExchange(ctx, new Exchange("exchange3", "product2", "supplier2", 200, new Date().toString(), TransactionType.SEND));
-        putExchange(ctx, new Exchange("exchange4", "product2", "company", 200, new Date().toString(), TransactionType.RECEIVE));
+        String timestamp = "2024-01-01 00:00:00 UTC";
+        putExchange(ctx, new Exchange("exchange1", "product1", "supplier1", 100, timestamp, TransactionType.SEND));
+        putExchange(ctx, new Exchange("exchange2", "product1", "company", 100, timestamp, TransactionType.RECEIVE));
+        putExchange(ctx, new Exchange("exchange3", "product2", "supplier2", 200, timestamp, TransactionType.SEND));
+        putExchange(ctx, new Exchange("exchange4", "product2", "company", 200, timestamp, TransactionType.RECEIVE));
         putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of("product1", 100, "product2", 200))));
     }
 
     @Transaction()
     public void test(final Context ctx) {
         System.out.println("Test Started");
-        Exchange exchange = createExchange(ctx, "exchange" + UUID.randomUUID(), "product1", "supplier1", 100, new Date().toString(), TransactionType.SEND);
+        String timestamp = "2024-01-01 00:00:00 UTC";
+        Exchange exchange = createExchange(ctx, "exchange-test-1", "product1", "supplier1", 100, timestamp, TransactionType.SEND);
         System.out.println("Exchange created: " + exchange);
         System.out.println("Test FInished");
     }
@@ -206,13 +210,27 @@ public final class StockRepository implements ContractInterface {
     }
 
     @Transaction()
-    public void trade(final Context ctx, final String sender, final String receiver, final String product_id, final int quantity) {
-        System.out.println("Trading " + quantity + " of " + product_id + " from " + sender + " to " + receiver);
-
-        String timestamp = new Date().toString();
-        createExchange(ctx, "exchange" + UUID.randomUUID(), product_id, sender, quantity, timestamp, TransactionType.SEND);
-        createExchange(ctx, "exchange" + UUID.randomUUID(), product_id, receiver, quantity, timestamp, TransactionType.RECEIVE);
+    private int getExchangeCount(final Context ctx) throws Exception {
+        int count = 0;
+        ChaincodeStub stub = ctx.getStub();
+        
+        try (QueryResultsIterator<KeyValue> results = stub.getStateByRange("exchange", "exchange\uffff")) {
+            for (KeyValue result : results) {
+                count++;
+            }
+        }
+        
+        return count;
     }
 
+    @Transaction()
+    public void trade(final Context ctx, final String sender, final String receiver, final String product_id, final int quantity) throws Exception {
+        System.out.println("Trading " + quantity + " of " + product_id + " from " + sender + " to " + receiver);
 
+        String timestamp = "2024-01-01 00:00:00 UTC";
+        int exchangeCounter = getExchangeCount(ctx);
+        String exchangeIdBase = String.format("%s-%s-%s-%d-%d", sender, receiver, product_id, quantity, exchangeCounter);
+        createExchange(ctx, "exchange-send-" + exchangeIdBase, product_id, sender, quantity, timestamp, TransactionType.SEND);
+        createExchange(ctx, "exchange-recv-" + exchangeIdBase, product_id, receiver, quantity, timestamp, TransactionType.RECEIVE);
+    }
 }

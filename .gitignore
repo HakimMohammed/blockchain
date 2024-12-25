@@ -21,3 +21,4 @@ network/system-genesis-block/genesis.block
 network/chaincode/java/stock/build/install/
 network/chaincode/java/stock/build/libs/
 network/log.txt
+network/java/stock/build/tmp
