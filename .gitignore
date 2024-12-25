@@ -18,6 +18,5 @@ network/organizations/ordererOrganizations/
 network/organizations/peerOrganizations/
 network/stock.tar.gz
 network/system-genesis-block/genesis.block
-network/chaincode/java/stock/build/install/
-network/chaincode/java/stock/build/libs/
+network/chaincode/java/stock/build
 network/log.txt
