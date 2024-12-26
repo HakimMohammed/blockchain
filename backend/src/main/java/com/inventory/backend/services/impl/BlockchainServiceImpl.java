@@ -1,10 +1,8 @@
 package com.inventory.backend.services.impl;
 
-import com.inventory.backend.blockchain.GatewaySingleton;
 import com.inventory.backend.enums.TransactionType;
 import com.inventory.backend.services.BlockchainService;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import org.hyperledger.fabric.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

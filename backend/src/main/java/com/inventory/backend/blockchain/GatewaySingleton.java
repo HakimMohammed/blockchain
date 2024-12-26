@@ -6,6 +6,7 @@ import io.grpc.TlsChannelCredentials;
 import org.hyperledger.fabric.client.Gateway;
 import org.hyperledger.fabric.client.Hash;
 import org.hyperledger.fabric.client.identity.*;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -29,12 +30,11 @@ public class GatewaySingleton {
 
     private static Gateway gateway;
 
-    public static synchronized Gateway getInstance() throws Exception {
-        if (gateway == null) {
-            gateway = createGateway();
-        }
-        return gateway;
+    @Bean
+    public Gateway gateway() throws Exception {
+        return createGateway();
     }
+
 
     private static Gateway createGateway() throws Exception {
         var channel = newGrpcConnection();
