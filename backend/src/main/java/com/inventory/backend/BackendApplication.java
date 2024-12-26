@@ -1,18 +1,7 @@
 package com.inventory.backend;
 
-import com.inventory.backend.controllers.BlockchainController;
-import com.inventory.backend.entities.Category;
-import com.inventory.backend.entities.Organization;
-import com.inventory.backend.entities.Product;
-import com.inventory.backend.entities.User;
-import com.inventory.backend.enums.OrganizationType;
-import com.inventory.backend.enums.UserRole;
-import com.inventory.backend.metier.BlockchainMetierImpl;
-import com.inventory.backend.services.CategoryService;
-import com.inventory.backend.services.OrganizationService;
-import com.inventory.backend.services.ProductService;
-import com.inventory.backend.services.UserService;
-import org.springframework.boot.CommandLineRunner;
+import com.inventory.backend.blockchain.GatewaySingleton;
+import org.hyperledger.fabric.client.Gateway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +10,12 @@ import org.springframework.context.annotation.Bean;
 public class BackendApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(BackendApplication.class, args);
+    }
+
+    @Bean
+    public Gateway gateway() throws Exception {
+        return GatewaySingleton.getInstance();
     }
 }
