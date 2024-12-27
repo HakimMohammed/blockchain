@@ -23,6 +23,10 @@ import java.util.*;
 @Default
 public final class StockRepository implements ContractInterface {
     private final Genson genson = new Genson();
+    private final UUID product1Id = UUID.fromString("fe5bed1a-cfcb-4644-a6b4-44964506ac4d");
+    private final UUID product2Id = UUID.fromString("64a771db-4390-4297-b806-bc462645a8e1");
+    private final UUID product3Id = UUID.fromString("795f2c95-965b-4412-b4ee-4f36d5a435af");
+    private final UUID product4Id = UUID.fromString("b1aeb715-80e2-4d40-9270-da5070d329bf");
 
     private Exchange putExchange(final Context ctx, final Exchange exchange) {
         ChaincodeStub stub = ctx.getStub();
@@ -41,21 +45,21 @@ public final class StockRepository implements ContractInterface {
 
     @Transaction()
     public void initLedger(final Context ctx) {
-        putInventory(ctx, new Inventory("supplier1", "supplier1", new LinkedHashMap<>(Map.of("product1", 500, "product3", 800))));
-        putInventory(ctx, new Inventory("supplier2", "supplier2", new LinkedHashMap<>(Map.of("product2", 800, "product4", 900))));
+        putInventory(ctx, new Inventory("supplier1", "supplier1", new LinkedHashMap<>(Map.of(product1Id, 500, product3Id, 800))));
+        putInventory(ctx, new Inventory("supplier2", "supplier2", new LinkedHashMap<>(Map.of(product2Id, 800, product4Id, 900))));
         String timestamp = "2024-01-01 00:00:00 UTC";
-        putExchange(ctx, new Exchange("exchange1", "product1", "supplier1", 100, timestamp, TransactionType.SEND));
-        putExchange(ctx, new Exchange("exchange2", "product1", "company", 100, timestamp, TransactionType.RECEIVE));
-        putExchange(ctx, new Exchange("exchange3", "product2", "supplier2", 200, timestamp, TransactionType.SEND));
-        putExchange(ctx, new Exchange("exchange4", "product2", "company", 200, timestamp, TransactionType.RECEIVE));
-        putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of("product1", 100, "product2", 200))));
+        putExchange(ctx, new Exchange("exchange1", product1Id, "supplier1", 100, timestamp, TransactionType.SEND));
+        putExchange(ctx, new Exchange("exchange2", product1Id, "company", 100, timestamp, TransactionType.RECEIVE));
+        putExchange(ctx, new Exchange("exchange3", product2Id, "supplier2", 200, timestamp, TransactionType.SEND));
+        putExchange(ctx, new Exchange("exchange4", product2Id, "company", 200, timestamp, TransactionType.RECEIVE));
+        putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of(product1Id, 100, product2Id, 200))));
     }
 
     @Transaction()
     public void test(final Context ctx) {
         System.out.println("Test Started");
         String timestamp = "2024-01-01 00:00:00 UTC";
-        Exchange exchange = createExchange(ctx, "exchange-test-1", "product1", "supplier1", 100, timestamp, TransactionType.SEND);
+        Exchange exchange = createExchange(ctx, "exchange-test-1", product1Id, "supplier1", 100, timestamp, TransactionType.SEND);
         System.out.println("Exchange created: " + exchange);
         System.out.println("Test FInished");
     }
@@ -104,7 +108,7 @@ public final class StockRepository implements ContractInterface {
     }
 
     @Transaction()
-    public boolean organizationHasStock(final Context ctx, final String organization, final String product_id, final int quantity) {
+    public boolean organizationHasStock(final Context ctx, final String organization, final UUID product_id, final int quantity) {
         Inventory inventory = getInventory(ctx, organization);
 
         if (inventory.getOrganization().equals(organization)) {
@@ -144,7 +148,7 @@ public final class StockRepository implements ContractInterface {
     }
 
     @Transaction()
-    public Inventory createInventory(final Context ctx, final String inventory_id, final String organization, final Map<String, Integer> stock) {
+    public Inventory createInventory(final Context ctx, final String inventory_id, final String organization, final Map<UUID, Integer> stock) {
 
         if (!inventoryExists(ctx, inventory_id)) {
             String errorMessage = String.format("Inventory %s already exists", inventory_id);
@@ -156,7 +160,7 @@ public final class StockRepository implements ContractInterface {
     }
 
     @Transaction()
-    public Exchange createExchange(final Context ctx, final String exchange_id, final String product_id, final String organization, final int quantity, final String date, final TransactionType transaction) {
+    public Exchange createExchange(final Context ctx, final String exchange_id, final UUID product_id, final String organization, final int quantity, final String date, final TransactionType transaction) {
 
         if (exchangeExists(ctx, exchange_id)) {
             String errorMessage = String.format("Exchange %s already exists", exchange_id);
@@ -170,7 +174,7 @@ public final class StockRepository implements ContractInterface {
     }
 
     @Transaction()
-    public void updateInventoryStock(final Context ctx, final String inventory_id, final String product_id, final int quantity, final TransactionType transactionType) {
+    public void updateInventoryStock(final Context ctx, final String inventory_id, final UUID product_id, final int quantity, final TransactionType transactionType) {
         ChaincodeStub stub = ctx.getStub();
 
         if (!inventoryExists(ctx, inventory_id)) {
@@ -181,7 +185,7 @@ public final class StockRepository implements ContractInterface {
 
         String inventoryState = stub.getStringState(inventory_id);
         Inventory inventory = genson.deserialize(inventoryState, Inventory.class);
-        Map<String, Integer> stock = inventory.getStock();
+        Map<UUID, Integer> stock = inventory.getStock();
 
         // if product_id does not exist in inventory
         if (!stock.containsKey(product_id)) {
@@ -213,18 +217,18 @@ public final class StockRepository implements ContractInterface {
     private int getExchangeCount(final Context ctx) throws Exception {
         int count = 0;
         ChaincodeStub stub = ctx.getStub();
-        
+
         try (QueryResultsIterator<KeyValue> results = stub.getStateByRange("exchange", "exchange\uffff")) {
             for (KeyValue result : results) {
                 count++;
             }
         }
-        
+
         return count;
     }
 
     @Transaction()
-    public void trade(final Context ctx, final String sender, final String receiver, final String product_id, final int quantity) throws Exception {
+    public void trade(final Context ctx, final String sender, final String receiver, final UUID product_id, final int quantity) throws Exception {
         System.out.println("Trading " + quantity + " of " + product_id + " from " + sender + " to " + receiver);
 
         String timestamp = "2024-01-01 00:00:00 UTC";

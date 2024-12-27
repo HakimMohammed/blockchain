@@ -1,26 +1,27 @@
 package com.inventory.backend.services.impl;
 
+import com.inventory.backend.entities.Exchange;
+import com.inventory.backend.entities.Inventory;
 import com.inventory.backend.enums.TransactionType;
+import com.inventory.backend.mappers.BlockchainMapper;
 import com.inventory.backend.services.BlockchainService;
-import jakarta.transaction.Transactional;
 import org.hyperledger.fabric.client.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Service
-@Transactional
 public class BlockchainServiceImpl implements BlockchainService {
     private static final String CHANNEL_NAME = System.getenv().getOrDefault("CHANNEL_NAME", "mychannel");
     private static final String CHAINCODE_NAME = System.getenv().getOrDefault("CHAINCODE_NAME", "stock");
 
     private final Contract contract;
+    private final Network network;
 
-    @Autowired
     public BlockchainServiceImpl(Gateway gateway) {
         try {
-            var network = gateway.getNetwork(CHANNEL_NAME);
+            this.network = gateway.getNetwork(CHANNEL_NAME);
             this.contract = network.getContract(CHAINCODE_NAME);
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize BlockchainController", e);
@@ -37,103 +38,96 @@ public class BlockchainServiceImpl implements BlockchainService {
     }
 
     @Override
-    public byte[] getExchangesByOrganization(String organization) throws GatewayException {
+    public List<Exchange> getExchangesByOrganization(String organization) throws GatewayException {
         System.out.println("\n--> Evaluate Transaction: getExchangesByOrganization, function returns all the exchanges for a specific organization");
 
-        return contract.evaluateTransaction("getExchangesByOrganization", organization);
+        byte[] result = contract.evaluateTransaction("getExchangesByOrganization", organization);
+        return BlockchainMapper.fromJsonToExchangeList(result);
     }
 
     @Override
-    public byte[] getInventory(String inventory) throws GatewayException {
+    public Inventory getInventory(String inventoryId) throws GatewayException {
         System.out.println("\n--> Evaluate Transaction: getInventory, function returns the inventory for a specific organization");
 
-        return contract.evaluateTransaction("getInventory", inventory);
+        byte[] result = contract.evaluateTransaction("getInventory", inventoryId);
+        return BlockchainMapper.fromJsonToInventory(result);
     }
 
     @Override
-    public byte[] getExchange(String exchange) throws GatewayException {
+    public Exchange getExchange(String exchangeId) throws GatewayException {
         System.out.println("\n--> Evaluate Transaction: getExchange, function returns the exchange for a specific exchange id");
 
-        return contract.evaluateTransaction("getExchange", exchange);
+        byte[] result = contract.evaluateTransaction("getExchange", exchangeId);
+        return BlockchainMapper.fromJsonToExchange(result);
     }
 
     @Override
-    public String createInventory(String inventory, String organization) throws EndorseException, SubmitException, CommitStatusException, CommitException {
+    public String createInventory(String inventoryId, String organization) throws EndorseException, SubmitException, CommitStatusException, CommitException {
         System.out.println("\n--> Submit Transaction: CreateInventory, function creates a new inventory on the ledger");
 
-        contract.submitTransaction("createInventory", inventory, organization);
+        contract.submitTransaction("createInventory", inventoryId, organization);
 
         return "Transaction committed successfully";
     }
 
     @Override
-    public String createExchange(String exchange_id, String product_id, String organization, int quantity, String date, TransactionType transaction)
-            throws EndorseException, SubmitException, CommitStatusException, CommitException {
-
+    public String createExchange(String exchangeId, String productId, String organization, int quantity, String date, TransactionType transaction) throws EndorseException, SubmitException, CommitStatusException, CommitException {
         System.out.println("\n--> Submit Transaction: CreateExchange, function creates a new exchange on the ledger");
 
-        String qte = Integer.toString(quantity);
+        String quantityStr = Integer.toString(quantity);
 
-        // Build and submit a proposal asynchronously
         var commit = contract.newProposal("createExchange")
-                .addArguments(exchange_id, product_id, organization, qte, date, transaction.toString())
+                .addArguments(exchangeId, productId, organization, quantityStr, date, transaction.toString())
                 .build()
                 .endorse()
                 .submitAsync();
 
-        // Get the result from the commit
         var result = commit.getResult();
         String exchangeResult = new String(result, StandardCharsets.UTF_8);
 
         System.out.println("*** Transaction result: " + exchangeResult);
 
-        // Wait for commit status
         var status = commit.getStatus();
         if (!status.isSuccessful()) {
             throw new RuntimeException("Transaction " + status.getTransactionId() +
                     " failed to commit with status code " + status.getCode());
         }
-
-        System.out.println("*** Transaction successfully committed");
 
         return exchangeResult;
     }
 
-
     @Override
-    public String updateInventoryStock(String inventory, String product_id, int quantity, TransactionType transaction) throws EndorseException, SubmitException, CommitStatusException, CommitException {
+    public String updateInventoryStock(String inventoryId, String productId, int quantity, TransactionType transaction) throws EndorseException, SubmitException, CommitStatusException, CommitException {
         System.out.println("\n--> Submit Transaction: UpdateInventoryStock, function updates the stock of a product in an inventory");
 
-        String qte = Integer.toString(quantity);
-        contract.submitTransaction("UpdateInventoryStock", inventory, product_id, qte, transaction.toString());
+        String quantityStr = Integer.toString(quantity);
+        contract.submitTransaction("UpdateInventoryStock", inventoryId, productId, quantityStr, transaction.toString());
 
         return "Transaction committed successfully";
     }
 
     @Override
-    public String trade(String sender, String receiver, String product_id, int quantity) throws EndorseException, SubmitException, CommitStatusException, CommitException {
+    public String trade(String sender, String receiver, String productId, int quantity) throws EndorseException, SubmitException, CommitStatusException, CommitException {
         System.out.println("\n--> Submit Transaction: Trade, function trades a product between two organizations");
 
-        String qte = Integer.toString(quantity);
+        String quantityStr = Integer.toString(quantity);
         var commit = contract.newProposal("trade")
-                .addArguments(sender, receiver, product_id, qte)
+                .addArguments(sender, receiver, productId, quantityStr)
                 .build()
                 .endorse()
                 .submitAsync();
 
-        // Get the result from the commit
         var result = commit.getResult();
-        String exchangeResult = new String(result, StandardCharsets.UTF_8);
+        String tradeResult = new String(result, StandardCharsets.UTF_8);
 
-        System.out.println("*** Transaction result: " + exchangeResult);
+        System.out.println("*** Transaction result: " + tradeResult);
 
-        // Wait for commit status
         var status = commit.getStatus();
         if (!status.isSuccessful()) {
             throw new RuntimeException("Transaction " + status.getTransactionId() +
                     " failed to commit with status code " + status.getCode());
         }
 
-        return "Transaction committed successfully";
+        return tradeResult;
     }
 }

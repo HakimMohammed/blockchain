@@ -7,7 +7,7 @@ import org.hyperledger.fabric.client.Gateway;
 import org.hyperledger.fabric.client.Hash;
 import org.hyperledger.fabric.client.identity.*;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,7 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Configuration
 public class GatewaySingleton {
 
     private static final String MSP_ID = System.getenv().getOrDefault("MSP_ID", "Org1MSP");
@@ -28,15 +28,12 @@ public class GatewaySingleton {
     private static final String PEER_ENDPOINT = "localhost:7051";
     private static final String OVERRIDE_AUTH = "peer0.org1.example.com";
 
-    private static Gateway gateway;
-
     @Bean
     public Gateway gateway() throws Exception {
         return createGateway();
     }
 
-
-    private static Gateway createGateway() throws Exception {
+    private Gateway createGateway() throws Exception {
         var channel = newGrpcConnection();
         return Gateway.newInstance()
                 .identity(newIdentity())
@@ -50,7 +47,7 @@ public class GatewaySingleton {
                 .connect();
     }
 
-    private static ManagedChannel newGrpcConnection() {
+    private ManagedChannel newGrpcConnection() {
         try {
             System.out.println("Attempting to create gRPC connection...");
             var credentials = TlsChannelCredentials.newBuilder()
@@ -69,7 +66,7 @@ public class GatewaySingleton {
         }
     }
 
-    private static Identity newIdentity() {
+    private Identity newIdentity() {
         try {
             System.out.println("Attempting to load identity certificate from " + CERT_DIR_PATH);
             try (var certReader = Files.newBufferedReader(getFirstFilePath(CERT_DIR_PATH))) {
@@ -84,7 +81,7 @@ public class GatewaySingleton {
         }
     }
 
-    private static Signer newSigner() {
+    private Signer newSigner() {
         try {
             System.out.println("Attempting to load private key from " + KEY_DIR_PATH);
             try (var keyReader = Files.newBufferedReader(getFirstFilePath(KEY_DIR_PATH))) {
@@ -99,7 +96,7 @@ public class GatewaySingleton {
         }
     }
 
-    private static Path getFirstFilePath(Path dirPath) {
+    private Path getFirstFilePath(Path dirPath) {
         try {
             System.out.println("Looking for files in directory: " + dirPath);
             try (var keyFiles = Files.list(dirPath)) {
@@ -109,7 +106,6 @@ public class GatewaySingleton {
             }
         } catch (IOException e) {
             System.out.println("Error accessing directory: " + dirPath + " - " + e.getMessage());
-            e.printStackTrace();
             throw new RuntimeException("Failed to access directory " + dirPath, e);
         }
     }

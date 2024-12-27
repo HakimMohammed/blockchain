@@ -13,6 +13,7 @@ import com.inventory.backend.entities.Organization;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class ProductResponse {
 
     private UUID id;

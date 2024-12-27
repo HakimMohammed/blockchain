@@ -6,6 +6,7 @@ import org.hyperledger.fabric.contract.annotation.Property;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @DataType()
 public final class Exchange {
@@ -14,7 +15,7 @@ public final class Exchange {
     private final String exchange_id;
 
     @Property()
-    private final String product_id;
+    private final UUID product_id;
 
     @Property()
     private final String organization;
@@ -32,7 +33,7 @@ public final class Exchange {
         return exchange_id;
     }
 
-    public String getProduct_id() {
+    public UUID getProduct_id() {
         return product_id;
     }
 
@@ -53,7 +54,7 @@ public final class Exchange {
         return transaction;
     }
 
-    public Exchange(@JsonProperty("exchange_id") final String exchange_id, @JsonProperty("product_id") final String product_id, @JsonProperty("organization") final String organization, @JsonProperty("quantity") final int quantity, @JsonProperty("date") final String date, @JsonProperty("transaction") final TransactionType transaction) {
+    public Exchange(@JsonProperty("exchange_id") final String exchange_id, @JsonProperty("product_id") final UUID product_id, @JsonProperty("organization") final String organization, @JsonProperty("quantity") final int quantity, @JsonProperty("date") final String date, @JsonProperty("transaction") final TransactionType transaction) {
         this.exchange_id = exchange_id;
         this.product_id = product_id;
         this.organization = organization;
@@ -74,14 +75,17 @@ public final class Exchange {
 
         Exchange other = (Exchange) obj;
         return Objects.deepEquals(
-                new String[]{getExchange_id(), getProduct_id(), getOrganization(), getDate()},
-                new String[]{other.getExchange_id(), other.getProduct_id(), other.getOrganization(), other.getDate()}
+                new String[]{getExchange_id(), getOrganization(), getDate()},
+                new String[]{other.getExchange_id(), other.getOrganization(), other.getDate()}
         ) && Objects.deepEquals(
                 new int[]{getQuantity()},
                 new int[]{other.getQuantity()}
         ) && Objects.deepEquals(
                 new TransactionType[]{getTransaction()},
                 new TransactionType[]{other.getTransaction()}
+        ) && Objects.deepEquals(
+                new UUID[]{getProduct_id()},
+                new UUID[]{other.getProduct_id()}
         );
     }
 

@@ -30,8 +30,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAll() {
-        List<Product> products = productService.findAll();
-        List<ProductResponse> responses = productMapper.toResponseList(products);  // Use the new method here
+        List<ProductResponse> responses = productService.findAll();
         return ResponseEntity.ok(responses);
     }
 

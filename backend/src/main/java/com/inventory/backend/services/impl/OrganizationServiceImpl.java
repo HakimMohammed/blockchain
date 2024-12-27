@@ -1,6 +1,8 @@
 package com.inventory.backend.services.impl;
 
+import com.inventory.backend.dtos.organization.OrganizationResponse;
 import com.inventory.backend.entities.Organization;
+import com.inventory.backend.mappers.OrganizationMapper;
 import com.inventory.backend.repos.OrganizationRepository;
 import com.inventory.backend.services.OrganizationService;
 import jakarta.transaction.Transactional;
@@ -17,10 +19,11 @@ import java.util.UUID;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
+    private final OrganizationMapper organizationMapper;
 
     @Override
-    public List<Organization> findAll() {
-        return organizationRepository.findAll();
+    public List<OrganizationResponse> findAll() {
+        return organizationMapper.toResponseList(organizationRepository.findAll());
     }
 
     @Override

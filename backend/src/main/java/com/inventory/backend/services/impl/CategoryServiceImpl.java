@@ -1,6 +1,8 @@
 package com.inventory.backend.services.impl;
 
+import com.inventory.backend.dtos.category.CategoryResponse;
 import com.inventory.backend.entities.Category;
+import com.inventory.backend.mappers.CategoryMapper;
 import com.inventory.backend.repos.CategoryRepository;
 import com.inventory.backend.services.CategoryService;
 import jakarta.transaction.Transactional;
@@ -17,10 +19,11 @@ import java.util.UUID;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Override
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> findAll() {
+        return categoryMapper.toResponseList(categoryRepository.findAll());
     }
 
     @Override

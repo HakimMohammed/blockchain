@@ -27,10 +27,6 @@ public class CreateProductRequest {
     @Min(value = 0, message = "Price must be greater than or equal to 0")
     private double price;
 
-    @NotNull(message = "Quantity is required")
-    @Min(value = 0, message = "Quantity must be greater than or equal to 0")
-    private int quantity;
-
     private String image;
 
     @NotNull(message = "Category ID is required")

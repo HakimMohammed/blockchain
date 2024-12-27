@@ -1,6 +1,8 @@
 package com.inventory.backend.services.impl;
 
+import com.inventory.backend.dtos.user.UserResponse;
 import com.inventory.backend.entities.User;
+import com.inventory.backend.mappers.UserMapper;
 import com.inventory.backend.repos.UserRepository;
 import com.inventory.backend.services.UserService;
 import jakarta.transaction.Transactional;
@@ -19,11 +21,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
-    public List<User> findAll() {
-        userRepository.findAll().forEach(System.out::println);
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return userMapper.toResponseList(userRepository.findAll());
     }
 
     @Override

@@ -27,10 +27,7 @@ public class OrganizationController {
 
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> findAll() {
-        List<Organization> organizations = organizationService.findAll();
-        List<OrganizationResponse> responses = organizations.stream()
-                .map(organizationMapper::toResponse)
-                .collect(Collectors.toList());
+        List<OrganizationResponse> responses = organizationService.findAll();
         return ResponseEntity.ok(responses);
     }
 

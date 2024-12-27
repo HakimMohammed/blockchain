@@ -28,9 +28,6 @@ public class Product {
     @Column(name = "price" , nullable = false )
     private double price;
 
-    @Column(name = "quantity" , nullable = false )
-    private int quantity;
-
     @Column(name = "image" )
     private String image;
 

@@ -1,8 +1,7 @@
 package com.inventory.backend.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
+import com.inventory.backend.entities.Exchange;
+import com.inventory.backend.entities.Inventory;
 import com.inventory.backend.enums.TransactionType;
 import com.inventory.backend.services.BlockchainService;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/blockchain")
@@ -18,16 +17,6 @@ import java.nio.charset.StandardCharsets;
 public class BlockchainController {
 
     private final BlockchainService blockchainService;
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    private String prettyJson(final byte[] json) {
-        return prettyJson(new String(json, StandardCharsets.UTF_8));
-    }
-
-    private String prettyJson(final String json) {
-        var parsedJson = JsonParser.parseString(json);
-        return gson.toJson(parsedJson);
-    }
 
     @PostMapping("/initLedger")
     public ResponseEntity<Void> initLedger() {
@@ -40,29 +29,33 @@ public class BlockchainController {
     }
 
     @GetMapping("/exchanges")
-    public ResponseEntity<String> getExchangesByOrganization(@RequestParam String organization) {
+    public ResponseEntity<List<Exchange>> getExchangesByOrganization(@RequestParam String organization) {
         try {
-            return ResponseEntity.ok(prettyJson(blockchainService.getExchangesByOrganization(organization)));
+            List<Exchange> exchanges = blockchainService.getExchangesByOrganization(organization);
+            return ResponseEntity.ok(exchanges);  // Return List of Exchange objects directly
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
     @GetMapping("/inventory")
-    public ResponseEntity<String> getInventory(@RequestParam String inventory) {
+    public ResponseEntity<Inventory> getInventory(@RequestParam String inventory) {
         try {
-            return ResponseEntity.ok(prettyJson(blockchainService.getInventory(inventory)));
+            Inventory inventoryData = blockchainService.getInventory(inventory);
+            return ResponseEntity.ok(inventoryData);  // Return Inventory object directly
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
     @GetMapping("/exchange/{exchange}")
-    public ResponseEntity<String> getExchange(@PathVariable String exchange) {
+    public ResponseEntity<Exchange> getExchange(@PathVariable String exchange) {
         try {
-            return ResponseEntity.ok(prettyJson(blockchainService.getExchange(exchange)));
+            Exchange exchangeData = blockchainService.getExchange(exchange);
+            return ResponseEntity.ok(exchangeData);  // Return Exchange object directly
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 

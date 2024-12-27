@@ -7,6 +7,7 @@ import org.hyperledger.fabric.contract.annotation.Property;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.UUID;
 
 @DataType
 public final class Inventory {
@@ -18,7 +19,7 @@ public final class Inventory {
     private final String organization;
 
     @Property()
-    private final Map<String, Integer> stock;
+    private final Map<UUID, Integer> stock;
 
     public String getInventory_id() {
         return inventory_id;
@@ -28,11 +29,11 @@ public final class Inventory {
         return organization;
     }
 
-    public Map<String, Integer> getStock() {
+    public Map<UUID, Integer> getStock() {
         return stock;
     }
 
-    public Inventory(@JsonProperty("inventory_id") final String inventory_id, @JsonProperty("organization") final String organization, @JsonProperty("stock") final Map<String, Integer> stock) {
+    public Inventory(@JsonProperty("inventory_id") final String inventory_id, @JsonProperty("organization") final String organization, @JsonProperty("stock") final Map<UUID, Integer> stock) {
         this.inventory_id = inventory_id;
         this.organization = organization;
         this.stock = new TreeMap<>(stock);

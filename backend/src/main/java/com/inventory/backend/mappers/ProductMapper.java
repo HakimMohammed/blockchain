@@ -23,7 +23,7 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
     private final OrganizationService organizationService;
     private final CategoryMapper categoryMapper;
 
-
+    @Override
     public Product toEntity(CreateProductRequest request) {
         Optional<Organization> organization = Optional.ofNullable(organizationService.findById(request.getOrganizationId()));
         Optional<Category> category = Optional.ofNullable(categoryService.findById(request.getCategoryId()));
@@ -32,14 +32,13 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setQuantity(request.getQuantity());
         product.setImage(request.getImage());
         product.setCategory(category.get());
         product.setOrganization(organization.get());
         return product;
     }
 
-
+    @Override
     public Product toEntity(UpdateProductRequest request, Product existingProduct) {
         if (request.getCategoryId() != null) {
             Category category = categoryService.findById(request.getCategoryId());
@@ -52,20 +51,25 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
         if (request.getName() != null) existingProduct.setName(request.getName());
         if (request.getDescription() != null) existingProduct.setDescription(request.getDescription());
         if (request.getPrice() != null) existingProduct.setPrice(request.getPrice());
-        if (request.getQuantity() != null) existingProduct.setQuantity(request.getQuantity());
         if (request.getImage() != null) existingProduct.setImage(request.getImage());
 
         return existingProduct;
     }
 
+    @Override
     public ProductResponse toResponse(Product product) {
+        return null;
+    }
+
+
+    public ProductResponse toResponse(Product product , Integer quantity) {
         if (product == null) return null;
         return new ProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getQuantity(),
+                quantity,
                 product.getImage(),
                 product.getCategory() != null ? categoryMapper.toResponse(product.getCategory()) : null,
                 product.getOrganization() != null ? product.getOrganization() : null
