@@ -1,7 +1,8 @@
 package com.inventory.backend.services.impl;
 
 import com.inventory.backend.dtos.product.ProductResponse;
-import com.inventory.backend.entities.*;
+import com.inventory.backend.entities.Inventory;
+import com.inventory.backend.entities.Product;
 import com.inventory.backend.mappers.CategoryMapper;
 import com.inventory.backend.repos.ProductRepository;
 import com.inventory.backend.services.AuthenticationService;
@@ -17,24 +18,28 @@ import java.util.UUID;
 
 @Service
 @Transactional
-
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final BlockchainService blockchainService;
     private final CategoryMapper categoryMapper;
-    private final String userOrganizationName;
+    private final AuthenticationService authenticationService;
 
-    public ProductServiceImpl(ProductRepository productRepository, BlockchainService blockchainService, AuthenticationService authenticationService, CategoryMapper categoryMapper) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              BlockchainService blockchainService,
+                              AuthenticationService authenticationService,
+                              CategoryMapper categoryMapper) {
         this.productRepository = productRepository;
         this.blockchainService = blockchainService;
+        this.authenticationService = authenticationService;
         this.categoryMapper = categoryMapper;
-        this.userOrganizationName = authenticationService.getAuthenticatedUser() != null ? authenticationService.getAuthenticatedUser().getOrganization().getName() : null;
     }
 
     @Override
     public List<ProductResponse> findAll() {
         try {
+            String userOrganizationName = authenticationService.getAuthenticatedUser().getOrganization().getName();
+            System.out.println("User organization name: " + userOrganizationName);
             Inventory inventory = blockchainService.getInventory(userOrganizationName);
             List<Product> products = productRepository.findAllByIdIn(inventory.stock().keySet());
             return products.stream()
@@ -51,20 +56,21 @@ public class ProductServiceImpl implements ProductService {
                     .toList();
 
         } catch (GatewayException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error retrieving inventory from blockchain: " + e.getMessage(), e);
         }
     }
 
     @Override
     public Product findById(UUID id) {
         try {
+            String userOrganizationName = authenticationService.getAuthenticatedUser().getOrganization().getName();
             Inventory inventory = blockchainService.getInventory(userOrganizationName);
             if (inventory.stock().containsKey(id)) {
                 return productRepository.findById(id).orElse(null);
             }
             return null;
         } catch (GatewayException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error retrieving inventory from blockchain: " + e.getMessage(), e);
         }
     }
 

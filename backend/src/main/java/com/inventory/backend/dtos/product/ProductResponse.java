@@ -3,9 +3,7 @@ package com.inventory.backend.dtos.product;
 import com.inventory.backend.dtos.category.CategoryResponse;
 import com.inventory.backend.entities.Category;
 import lombok.*;
-
 import java.util.UUID;
-
 import com.inventory.backend.entities.Organization;
 
 @Getter
