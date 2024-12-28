@@ -11,7 +11,7 @@ curl -sSL https://bit.ly/2ysbOFE | bash -s -- -d -s
 
 ### Remove existing network
 ```shell
-./netwrok.sh down
+./network.sh down
 ```
 ### Check if the network is down
 ```shell
