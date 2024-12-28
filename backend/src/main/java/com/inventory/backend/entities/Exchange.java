@@ -2,23 +2,11 @@ package com.inventory.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.inventory.backend.enums.TransactionType;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.UUID;
 
-@Getter
-@EqualsAndHashCode
-@ToString
-public final class Exchange {
-    private final String exchange_id;
-    private final UUID product_id;
-    private final String organization;
-    private final int quantity;
-    private final String date;
-    private final TransactionType transaction;
-
+public record Exchange(String exchange_id, UUID product_id, String organization, int quantity, String date,
+                       TransactionType transaction) {
     public Exchange(@JsonProperty("exchange_id") final String exchange_id,
                     @JsonProperty("product_id") final UUID product_id,
                     @JsonProperty("organization") final String organization,
@@ -33,4 +21,3 @@ public final class Exchange {
         this.transaction = transaction;
     }
 }
-

@@ -1,26 +1,19 @@
 package com.inventory.backend.services.impl;
 
 import com.inventory.backend.dtos.product.ProductResponse;
-import com.inventory.backend.dtos.user.UserResponse;
 import com.inventory.backend.entities.*;
 import com.inventory.backend.mappers.CategoryMapper;
 import com.inventory.backend.repos.ProductRepository;
-import com.inventory.backend.repos.UserRepository;
 import com.inventory.backend.services.AuthenticationService;
 import com.inventory.backend.services.BlockchainService;
-import com.inventory.backend.services.OrganizationService;
 import com.inventory.backend.services.ProductService;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.hyperledger.fabric.client.GatewayException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,16 +29,14 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
         this.blockchainService = blockchainService;
         this.categoryMapper = categoryMapper;
-        // check if the user is authenticated
-        this.userOrganizationName = authenticationService.getAuthenticatedUser() != null ? authenticationService.getAuthenticatedUser().getOrganization().getName() : "company";
-        System.out.println("userOrganizationName: " + userOrganizationName);
+        this.userOrganizationName = authenticationService.getAuthenticatedUser() != null ? authenticationService.getAuthenticatedUser().getOrganization().getName() : null;
     }
 
     @Override
     public List<ProductResponse> findAll() {
         try {
             Inventory inventory = blockchainService.getInventory(userOrganizationName);
-            List<Product> products = productRepository.findAllByIdIn(inventory.getStock().keySet());
+            List<Product> products = productRepository.findAllByIdIn(inventory.stock().keySet());
             return products.stream()
                     .map(product -> ProductResponse.builder()
                             .id(product.getId())
@@ -53,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
                             .description(product.getDescription())
                             .price(product.getPrice())
                             .image(product.getImage())
-                            .quantity(inventory.getStock().get(product.getId()))
+                            .quantity(inventory.stock().get(product.getId()))
                             .category(categoryMapper.toResponse(product.getCategory()))
                             .organization(product.getOrganization())
                             .build())
@@ -68,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     public Product findById(UUID id) {
         try {
             Inventory inventory = blockchainService.getInventory(userOrganizationName);
-            if (inventory.getStock().containsKey(id)) {
+            if (inventory.stock().containsKey(id)) {
                 return productRepository.findById(id).orElse(null);
             }
             return null;
