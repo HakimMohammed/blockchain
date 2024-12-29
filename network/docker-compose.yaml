@@ -1,16 +1,13 @@
 
 # SPDX-License-Identifier: Apache-2.0
-version: '2.1'
-
 volumes:
   pgdata:
   walletstore:
 
 networks:
   mynetwork.com:
-    # Change this to the name of your network
+    external: true
     name: docker_test
-
 services:
 
   explorerdb.mynetwork.com:
