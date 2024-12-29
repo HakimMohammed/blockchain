@@ -24,6 +24,6 @@ module com.inventory.ui {
     opens com.inventory.ui.auth to com.fasterxml.jackson.databind; // Add this line to open the package to Jackson
     opens com.inventory.ui to javafx.fxml;
     opens com.inventory.ui.services to javafx.fxml;
-    opens com.inventory.ui.models to javafx.fxml;
+    opens com.inventory.ui.models to javafx.fxml , com.fasterxml.jackson.databind;
 
 }

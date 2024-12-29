@@ -3,14 +3,24 @@ package com.inventory.ui.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inventory.ui.auth.AuthSession;
 import com.inventory.ui.dtos.auth.LoginRequest;
+import com.inventory.ui.models.User;
 import okhttp3.Response;
 
 public class AuthenticationService {
+    private static AuthenticationService instance;
     private final HttpService httpService;
 
     public AuthenticationService() {
         this.httpService = new HttpService();
     }
+
+    public static AuthenticationService getInstance() {
+        if (instance == null) {
+            instance = new AuthenticationService();
+        }
+        return instance;
+    }
+
 
     public boolean login(String email, String password) {
         try {
@@ -21,7 +31,6 @@ public class AuthenticationService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String responseBody = response.body().string();
                 AuthSession authSession = objectMapper.readValue(responseBody, AuthSession.class);
-                System.out.println(authSession);
                 TokenStorageService.saveToken(authSession.getAccessToken());
                 return true;
             }
@@ -51,5 +60,19 @@ public class AuthenticationService {
             System.out.println("Error during logout: " + e.getMessage());
         }
         return false;
+    }
+
+    public User me() {
+        try {
+            Response response = httpService.get("auth/me");
+            if (response.isSuccessful()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String responseBody = response.body().string();
+                return objectMapper.readValue(responseBody, User.class);
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching user details: " + e.getMessage());
+        }
+        return null;
     }
 }

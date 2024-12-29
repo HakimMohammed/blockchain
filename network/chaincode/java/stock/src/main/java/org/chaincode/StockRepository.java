@@ -47,12 +47,12 @@ public final class StockRepository implements ContractInterface {
     public void initLedger(final Context ctx) {
         putInventory(ctx, new Inventory("supplier1", "supplier1", new LinkedHashMap<>(Map.of(product1Id, 500, product3Id, 800))));
         putInventory(ctx, new Inventory("supplier2", "supplier2", new LinkedHashMap<>(Map.of(product2Id, 800, product4Id, 900))));
+        putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of(product1Id, 100, product2Id, 200))));
         String timestamp = "2024-01-01 00:00:00 UTC";
         putExchange(ctx, new Exchange("exchange1", product1Id, "supplier1", 100, timestamp, TransactionType.SEND));
         putExchange(ctx, new Exchange("exchange2", product1Id, "company", 100, timestamp, TransactionType.RECEIVE));
         putExchange(ctx, new Exchange("exchange3", product2Id, "supplier2", 200, timestamp, TransactionType.SEND));
         putExchange(ctx, new Exchange("exchange4", product2Id, "company", 200, timestamp, TransactionType.RECEIVE));
-        putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of(product1Id, 100, product2Id, 200))));
     }
 
     @Transaction()

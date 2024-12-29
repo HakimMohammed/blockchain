@@ -1,6 +1,6 @@
 package com.inventory.backend.enums;
 
 public enum TransactionType {
-    RECEIVED,
+    RECEIVE,
     SEND
 }

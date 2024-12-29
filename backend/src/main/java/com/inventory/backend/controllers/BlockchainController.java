@@ -34,7 +34,7 @@ public class BlockchainController {
             List<Exchange> exchanges = blockchainService.getExchangesByOrganization(organization);
             return ResponseEntity.ok(exchanges);  // Return List of Exchange objects directly
         } catch (Exception e) {
-e.printStackTrace();
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

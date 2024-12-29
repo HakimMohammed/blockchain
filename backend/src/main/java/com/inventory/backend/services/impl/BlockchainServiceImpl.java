@@ -17,11 +17,10 @@ public class BlockchainServiceImpl implements BlockchainService {
     private static final String CHAINCODE_NAME = System.getenv().getOrDefault("CHAINCODE_NAME", "stock");
 
     private final Contract contract;
-    private final Network network;
 
     public BlockchainServiceImpl(Gateway gateway) {
         try {
-            this.network = gateway.getNetwork(CHANNEL_NAME);
+            Network network = gateway.getNetwork(CHANNEL_NAME);
             this.contract = network.getContract(CHAINCODE_NAME);
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize BlockchainController", e);
