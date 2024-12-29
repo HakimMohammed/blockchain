@@ -20,55 +20,29 @@ Hyperledger Fabric Explorer UI is a user-friendly web application that provides 
 ## Requirements
 
 - Docker v20.10.x or higher
-- Docker Compose v2.0.x or higher
 - Node.js v14.x or higher
 - PostgreSQL v10.x or higher
 - A running Hyperledger Fabric network
 - Modern web browser (Chrome, Firefox, Safari)
 
-## Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/hyperledger/blockchain-explorer.git
-cd blockchain-explorer
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Configure the database:
-```bash
-cd app/persistence/fabric/postgreSQL
-./createdb.sh
-```
-
-4. Update the config.json with your network details:
-```json
-{
-"network-configs": {
-    "test-network": {
-    "name": "Test Network",
-    "profile": "./connection-profile/test-network.json"
-    }
-}
-}
-```
-
 ## Usage
 
 1. Start the Explorer:
 ```bash
-./start.sh
+cd explorer
+docker-compose up
 ```
 
 2. Access the UI:
-- Open your browser and navigate to `http://localhost:8080`
+- Open your browser and navigate to `http://localhost:3000`
 - Default credentials: 
-    - Username: admin
-    - Password: adminpw
+    - Username: exploreradmin
+    - Password: exploreradminpw
+
+3. Stop the Explorer
+```bash
+docker-compose down
+```
 
 ## Configuration
 
@@ -76,22 +50,20 @@ The Explorer can be configured through various configuration files:
 
 - `config.json`: Main configuration file for network details
 - `connection-profile/`: Directory containing network connection profiles
-- `explorerconfig.json`: Explorer-specific configurations
+- `docker-compose.yaml`: Explorer-specific configurations
 
 ## Troubleshooting
 
-- Ensure all ports required by the Explorer are available
-- Check logs in the `logs/` directory for detailed error messages
-- Verify network connectivity to your Fabric network
-- Ensure proper configuration in connection profiles
+If there is any error or problem in the process of starting explorer run these commands:
+```bash
+docker-compose down
+docker system prune
+docker volume prune
+```
 
-## Contributing
+then try to start Explorer again
 
-Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
-
-## License
-
-This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
+*Ensure all ports required by the Explorer are available*
 
 ## Support
 
