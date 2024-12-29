@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="mainContainer"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.inventory.ui.controllers.DashboardController"
+            styleClass="main-view">
+
+    <top>
+        <fx:include source="navbar-view.fxml"/>
+    </top>
+
+    <right>
+        <fx:include source="sidebar-view.fxml"/>
+    </right>
+
+    <center>
+        <fx:include source="product-table-view.fxml"/>
+    </center>
+
+</BorderPane>

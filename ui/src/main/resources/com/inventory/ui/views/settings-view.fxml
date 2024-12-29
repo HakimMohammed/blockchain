@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.inventory.ui.controllers.SettingsController"
+      spacing="10" alignment="CENTER" >
+    <Label text="Settings" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="API URL:"/>
+        <TextField fx:id="apiUrlField" promptText="Enter API URL"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <CheckBox fx:id="enableNotifications" text="Enable Notifications"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="saveButton" text="Save" onAction="#handleSave"/>
+        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel"/>
+    </HBox>
+</VBox>

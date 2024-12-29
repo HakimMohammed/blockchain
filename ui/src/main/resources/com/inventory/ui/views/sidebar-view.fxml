@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.inventory.ui.controllers.SidebarController"
+      styleClass="sidebar"
+      spacing="10"
+      prefWidth="200">
+
+    <Button fx:id="ExchangesButton"
+            text="Exchanges"
+            styleClass="nav-button,flat-button"
+            maxWidth="Infinity"/>
+
+    <Button fx:id="productsButton"
+            text="Products"
+            styleClass="nav-button,flat-button"
+            maxWidth="Infinity"/>
+
+    <Button fx:id="settingsButton"
+            text="Settings"
+            styleClass="nav-button,flat-button"
+            maxWidth="Infinity"/>
+
+</VBox>

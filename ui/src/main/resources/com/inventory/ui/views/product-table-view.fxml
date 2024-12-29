@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Pagination?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.inventory.ui.controllers.ProductTableController"
+      styleClass="product-table-container"
+      spacing="20">
+
+    <TableView fx:id="productTable"
+               VBox.vgrow="ALWAYS"/>
+
+    <Pagination fx:id="pagination"
+                styleClass="flat-pagination"/>
+
+</VBox>
