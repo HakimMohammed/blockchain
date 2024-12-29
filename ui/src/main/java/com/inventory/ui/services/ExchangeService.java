@@ -2,16 +2,14 @@ package com.inventory.ui.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inventory.ui.dtos.exchange.TradeRequest;
 import com.inventory.ui.models.Exchange;
-import com.inventory.ui.models.Product;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ExchangeService {
     private static ExchangeService instance;
@@ -52,5 +50,20 @@ public class ExchangeService {
 
     private int findExchangeIndex(String id) {
         return exchanges.indexOf(exchanges.stream().filter(product -> product.getExchange_id().equals(id)).findFirst().get());
+    }
+
+    public void tradeProducts(String senderId, String productId, int quantity) {
+        try {
+            TradeRequest tradeRequest = TradeRequest.builder().senderId(senderId).receiverId("company").productId(productId).quantity(quantity).build();
+            Response response = httpService.post("exchanges/trade", tradeRequest);
+
+            if (!response.isSuccessful()) {
+                System.out.println("Failed to trade products: " + response.body().string());
+            } else {
+                System.out.println("Trade successful!");
+            }
+        } catch (IOException e) {
+            System.out.println("Error trading products: " + e.getMessage());
+        }
     }
 }

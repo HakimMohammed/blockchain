@@ -96,7 +96,6 @@ public class ExchangeController {
         return exchangeTable;
     }
 
-
     private void refreshTable() {
         pagination.setPageCount((exchangeService.getTotalExchanges() + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE);
         createPage(pagination.getCurrentPageIndex());

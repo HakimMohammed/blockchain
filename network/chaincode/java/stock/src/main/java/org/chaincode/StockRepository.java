@@ -228,13 +228,15 @@ public final class StockRepository implements ContractInterface {
     }
 
     @Transaction()
-    public void trade(final Context ctx, final String sender, final String receiver, final UUID product_id, final int quantity) throws Exception {
+    public void trade(final Context ctx, final String sender, final String receiver, final String product_id, final int quantity) throws Exception {
+
+        UUID product = UUID.fromString(product_id);
         System.out.println("Trading " + quantity + " of " + product_id + " from " + sender + " to " + receiver);
 
         String timestamp = "2024-01-01 00:00:00 UTC";
         int exchangeCounter = getExchangeCount(ctx);
         String exchangeIdBase = String.format("%s-%s-%s-%d-%d", sender, receiver, product_id, quantity, exchangeCounter);
-        createExchange(ctx, "exchange-send-" + exchangeIdBase, product_id, sender, quantity, timestamp, TransactionType.SEND);
-        createExchange(ctx, "exchange-recv-" + exchangeIdBase, product_id, receiver, quantity, timestamp, TransactionType.RECEIVE);
+        createExchange(ctx, "exchange-send-" + exchangeIdBase, product, sender, quantity, timestamp, TransactionType.SEND);
+        createExchange(ctx, "exchange-recv-" + exchangeIdBase, product, receiver, quantity, timestamp, TransactionType.RECEIVE);
     }
 }

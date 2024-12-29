@@ -17,6 +17,7 @@ module com.inventory.ui {
     exports com.inventory.ui.services;
     exports com.inventory.ui.models;
     exports com.inventory.ui.dtos.auth;
+    exports com.inventory.ui.dtos.exchange;
     exports com.inventory.ui.enums to com.fasterxml.jackson.databind;
 
     opens com.inventory.ui.controllers to javafx.fxml;

@@ -8,9 +8,7 @@ import javafx.collections.ObservableList;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ProductService {
     private static ProductService instance;

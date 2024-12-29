@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BlockchainServiceImpl implements BlockchainService {

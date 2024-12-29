@@ -4,6 +4,7 @@ import com.inventory.backend.entities.Exchange;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ExchangeService {
@@ -22,6 +23,14 @@ public class ExchangeService {
             return blockchainService.getExchangesByOrganization(userOrganizationName);
         } catch (Exception e) {
             throw new RuntimeException("Error retrieving exchanges from blockchain: " + e.getMessage(), e);
+        }
+    }
+
+    public String tradeProducts(String senderId, String receiverId, String productId, int quantity) {
+        try {
+            return blockchainService.trade(senderId, receiverId, productId, quantity);
+        } catch (Exception e) {
+            throw new RuntimeException("Error trading products: " + e.getMessage(), e);
         }
     }
 }

@@ -1,12 +1,11 @@
 package com.inventory.backend.controllers;
 
+import com.inventory.backend.dtos.exchange.TradeRequest;
 import com.inventory.backend.entities.Exchange;
 import com.inventory.backend.services.ExchangeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,4 +27,16 @@ public class ExchangeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @PostMapping("/trade")
+    public ResponseEntity<String> tradeProducts(@RequestBody TradeRequest tradeRequest) {
+        try {
+            exchangeService.tradeProducts(tradeRequest.getSenderId(), tradeRequest.getReceiverId(), tradeRequest.getProductId(), tradeRequest.getQuantity());
+            return ResponseEntity.ok("Trade executed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error executing trade: " + e.getMessage());
+        }
+    }
+
 }

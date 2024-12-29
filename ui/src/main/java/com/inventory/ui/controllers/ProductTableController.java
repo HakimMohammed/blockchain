@@ -2,6 +2,7 @@ package com.inventory.ui.controllers;
 
 import com.inventory.ui.models.Product;
 import com.inventory.ui.services.AuthenticationService;
+import com.inventory.ui.services.ExchangeService;
 import com.inventory.ui.services.ProductService;
 import com.inventory.ui.utils.DialogUtils;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ public class ProductTableController {
     @FXML
     private Pagination pagination;
 
+    private final ExchangeService exchangeService = ExchangeService.getInstance();
     private final ProductService productService = ProductService.getInstance();
     private final AuthenticationService authenticationService = AuthenticationService.getInstance();
     private final String userCompany = authenticationService.me().getOrganization().getName();
@@ -87,6 +89,12 @@ public class ProductTableController {
 
                 Label quantityLabel = new Label("Quantity:");
                 TextField quantityField = new TextField();
+                quantityField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.matches("\\d*")) { // Allow only digits
+                        quantityField.setText(oldValue);
+                    }
+                });
+
 
                 GridPane gridPane = new GridPane();
                 gridPane.setHgap(10);
@@ -102,8 +110,18 @@ public class ProductTableController {
 
                 dialog.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
-                        String quantity = quantityField.getText();
-                        // Handle the send action with the selected product and quantity
+                        String inputValue = quantityField.getText();
+                        if(!inputValue.isEmpty()) {
+                            int quantity = Integer.parseInt(inputValue);
+                            try {
+                                exchangeService.tradeProducts(userCompany, product.getId().toString(), quantity );
+                                refreshTable();
+                            } catch (Exception e) {
+                                DialogUtils.showError("Error sending product", e.getMessage());
+                            }
+                        } else {
+                            DialogUtils.showError("Error sending product", "Please enter a valid quantity");
+                        }
                     }
                 });
             }
