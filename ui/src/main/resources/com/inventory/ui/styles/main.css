@@ -55,3 +55,8 @@
     -fx-border-radius: 4;
 }
 
+.selected-button {
+    background-color: #2980b9;
+    -fx-background-color: #2980b9;
+    -fx-text-fill: white;
+}

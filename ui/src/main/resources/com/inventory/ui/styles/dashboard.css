@@ -51,7 +51,7 @@
 }
 
 .nav-button:hover {
-    -fx-background-color: #f0f7ff;
+    -fx-background-color: #7bb0e8;
 }
 
 .nav-button .ikonli-font-icon {
@@ -88,7 +88,3 @@
     -fx-background-color: #357abd;
 }
 
-.selected-button {
-    -fx-background-color: blue;
-    -fx-text-fill: white;
-}

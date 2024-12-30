@@ -25,6 +25,7 @@ public class SidebarController {
         setupButton(ExchangesButton, Feather.REFRESH_CCW, "exchange-table-view.fxml");
         setupButton(productsButton, Feather.PACKAGE, "product-table-view.fxml");
         setupButton(settingsButton, Feather.SETTINGS, "settings-view.fxml");
+        markSelectedButton(ExchangesButton); // Set ExchangesButton as the default selected button
     }
 
     private void setupButton(Button button, Feather icon, String page) {

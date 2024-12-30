@@ -1,10 +1,13 @@
 package com.inventory.ui.controllers;
 
+import com.inventory.ui.enums.OrganizationType;
+import com.inventory.ui.models.Organization;
 import com.inventory.ui.models.Product;
 import com.inventory.ui.services.AuthenticationService;
 import com.inventory.ui.services.ExchangeService;
 import com.inventory.ui.services.ProductService;
 import com.inventory.ui.utils.DialogUtils;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -20,9 +23,8 @@ public class ProductTableController {
     private final ExchangeService exchangeService = ExchangeService.getInstance();
     private final ProductService productService = ProductService.getInstance();
     private final AuthenticationService authenticationService = AuthenticationService.getInstance();
-    private final String userCompany = authenticationService.me().getOrganization().getName();
+    private final Organization userOrganization = authenticationService.me().getOrganization();
     private static final int ITEMS_PER_PAGE = 10;
-
 
     @FXML
     private void initialize() {
@@ -33,20 +35,20 @@ public class ProductTableController {
     private void setupTable() {
         TableColumn<Product, String> nameCol = new TableColumn<>("Name");
         TableColumn<Product, String> descCol = new TableColumn<>("Description");
-        TableColumn<Product, Double> priceCol = new TableColumn<>("Price");
+        TableColumn<Product, String> priceCol = new TableColumn<>("Price");
         TableColumn<Product, Integer> quantityCol = new TableColumn<>("Quantity");
         TableColumn<Product, String> categoryCol = new TableColumn<>("Category");
         TableColumn<Product, Void> actionsCol = new TableColumn<>("Actions");
 
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        priceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrice() + " dh"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("categoryName"));
 
         productTable.getColumns().addAll(nameCol, descCol, priceCol, quantityCol, categoryCol);
 
-        if ("supplier1".equals(userCompany)) {
+        if (OrganizationType.SUPPLIER.equals(userOrganization.getType())) {
             setupActionsColumn(actionsCol);
             productTable.getColumns().add(actionsCol);
         }
@@ -71,7 +73,7 @@ public class ProductTableController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    if ("supplier1".equals(userCompany)) {
+                    if (OrganizationType.SUPPLIER.equals(userOrganization.getType())) {
                         setGraphic(sendButton);
                     } else {
                         setGraphic(null);
@@ -90,16 +92,15 @@ public class ProductTableController {
                 Label quantityLabel = new Label("Quantity:");
                 TextField quantityField = new TextField();
                 quantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.matches("\\d*")) { // Allow only digits
+                    if (!newValue.matches("\\d*")) {
                         quantityField.setText(oldValue);
                     }
                 });
 
-
                 GridPane gridPane = new GridPane();
                 gridPane.setHgap(10);
                 gridPane.setVgap(10);
-                gridPane.setPadding(new Insets(10)); // Add padding
+                gridPane.setPadding(new Insets(10));
                 gridPane.add(productLabel, 0, 0);
                 gridPane.add(productField, 1, 0);
                 gridPane.add(quantityLabel, 0, 1);
@@ -111,10 +112,10 @@ public class ProductTableController {
                 dialog.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         String inputValue = quantityField.getText();
-                        if(!inputValue.isEmpty()) {
+                        if (!inputValue.isEmpty()) {
                             int quantity = Integer.parseInt(inputValue);
                             try {
-                                exchangeService.tradeProducts(userCompany, product.getId().toString(), quantity );
+                                exchangeService.tradeProducts(userOrganization.getName(), product.getId().toString(), quantity);
                                 refreshTable();
                             } catch (Exception e) {
                                 DialogUtils.showError("Error sending product", e.getMessage());
@@ -138,14 +139,6 @@ public class ProductTableController {
         int fromIndex = pageIndex * ITEMS_PER_PAGE;
         productTable.setItems(productService.getProducts());
         return productTable;
-    }
-
-
-    private boolean confirmDelete(Product product) {
-        return DialogUtils.showConfirmation(
-                "Confirm Delete",
-                "Are you sure you want to delete " + product.getName() + "?"
-        );
     }
 
     private void refreshTable() {

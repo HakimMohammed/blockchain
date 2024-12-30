@@ -67,7 +67,6 @@ public class LoginController implements Initializable {
 
     private void handleLoginSuccess() {
         AlertUtils.showSuccess(statusLabel, "Login successful!");
-        // Add navigation logic here
     }
 
     private void handleLoginError(String message) {
