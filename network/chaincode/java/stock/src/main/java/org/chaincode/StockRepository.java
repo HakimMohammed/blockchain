@@ -23,10 +23,10 @@ import java.util.*;
 @Default
 public final class StockRepository implements ContractInterface {
     private final Genson genson = new Genson();
-    private final UUID product1Id = UUID.fromString("fe5bed1a-cfcb-4644-a6b4-44964506ac4d");
-    private final UUID product2Id = UUID.fromString("64a771db-4390-4297-b806-bc462645a8e1");
-    private final UUID product3Id = UUID.fromString("795f2c95-965b-4412-b4ee-4f36d5a435af");
-    private final UUID product4Id = UUID.fromString("b1aeb715-80e2-4d40-9270-da5070d329bf");
+    private final UUID product1Id = UUID.fromString("09b52335-63cb-45f3-a16a-b7c92c991097");
+    private final UUID product2Id = UUID.fromString("517b55cb-2484-4b0f-aff6-8451006b2bf5");
+    private final UUID product3Id = UUID.fromString("5c643964-3948-42b2-99b4-138749c2f38f");
+    private final UUID product4Id = UUID.fromString("a3944f05-014b-4075-b428-ffd83d8c9c99");
 
     private Exchange putExchange(final Context ctx, final Exchange exchange) {
         ChaincodeStub stub = ctx.getStub();
@@ -45,13 +45,12 @@ public final class StockRepository implements ContractInterface {
 
     @Transaction()
     public void initLedger(final Context ctx) {
-        putInventory(ctx, new Inventory("supplier1", "supplier1", new LinkedHashMap<>(Map.of(product1Id, 500, product3Id, 800))));
-        putInventory(ctx, new Inventory("supplier2", "supplier2", new LinkedHashMap<>(Map.of(product2Id, 800, product4Id, 900))));
-        putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of(product1Id, 100, product2Id, 200))));
+        putInventory(ctx, new Inventory("supplier", "supplier", new LinkedHashMap<>(Map.of(product1Id, 500, product3Id, 800 , product2Id , 1000 , product4Id , 2000))));
+        putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of(product1Id, 100, product2Id, 200 ))));
         String timestamp = "2024-01-01 00:00:00 UTC";
-        putExchange(ctx, new Exchange("exchange1", product1Id, "supplier1", 100, timestamp, TransactionType.SEND));
+        putExchange(ctx, new Exchange("exchange1", product1Id, "supplier", 100, timestamp, TransactionType.SEND));
         putExchange(ctx, new Exchange("exchange2", product1Id, "company", 100, timestamp, TransactionType.RECEIVE));
-        putExchange(ctx, new Exchange("exchange3", product2Id, "supplier2", 200, timestamp, TransactionType.SEND));
+        putExchange(ctx, new Exchange("exchange3", product3Id, "supplier", 200, timestamp, TransactionType.SEND));
         putExchange(ctx, new Exchange("exchange4", product2Id, "company", 200, timestamp, TransactionType.RECEIVE));
     }
 
