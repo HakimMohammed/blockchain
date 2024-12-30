@@ -32,6 +32,4 @@ public class CreateProductRequest {
     @NotNull(message = "Category ID is required")
     private UUID categoryId;
 
-    @NotNull(message = "Organization ID is required")
-    private UUID organizationId;
 }

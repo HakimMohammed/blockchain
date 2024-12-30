@@ -17,6 +17,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id" , length = 255)
     private UUID id;
 
     @Column(name = "name" , nullable = false , length = 25 )
@@ -34,8 +35,4 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    @ManyToOne
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
-
 }

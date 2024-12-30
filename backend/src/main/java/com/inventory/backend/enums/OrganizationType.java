@@ -6,3 +6,4 @@ public enum OrganizationType {
     COSTUMER ,
     COMPANY,
 }
+

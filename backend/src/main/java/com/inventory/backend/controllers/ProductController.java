@@ -49,21 +49,4 @@ public class ProductController {
 
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateById(
-            @PathVariable UUID id,
-            @RequestBody @Valid UpdateProductRequest request) {
-
-        Product existingProduct = productService.findById(id);
-        Product updatedProduct = productMapper.toEntity(request, existingProduct);
-        updatedProduct = productService.save(updatedProduct);
-
-        return ResponseEntity.ok(productMapper.toResponse(updatedProduct));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
-        productService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 }

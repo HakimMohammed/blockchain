@@ -2,6 +2,7 @@ package com.inventory.backend.services.impl;
 
 import com.inventory.backend.dtos.product.ProductResponse;
 import com.inventory.backend.entities.Inventory;
+import com.inventory.backend.entities.Organization;
 import com.inventory.backend.entities.Product;
 import com.inventory.backend.mappers.CategoryMapper;
 import com.inventory.backend.repos.ProductRepository;
@@ -38,9 +39,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> findAll() {
         try {
-            String userOrganizationName = authenticationService.getAuthenticatedUser().getOrganization().getName();
-            System.out.println("User organization name: " + userOrganizationName);
-            Inventory inventory = blockchainService.getInventory(userOrganizationName);
+            Organization userOrganization = authenticationService.getAuthenticatedUser().getOrganization();
+            System.out.println("User organization name: " + userOrganization.getName());
+            Inventory inventory = blockchainService.getInventory(userOrganization.getName());
             List<Product> products = productRepository.findAllByIdIn(inventory.stock().keySet());
             return products.stream()
                     .map(product -> ProductResponse.builder()
@@ -51,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
                             .image(product.getImage())
                             .quantity(inventory.stock().get(product.getId()))
                             .category(categoryMapper.toResponse(product.getCategory()))
-                            .organization(product.getOrganization())
+                            .organization(userOrganization)
                             .build())
                     .toList();
 

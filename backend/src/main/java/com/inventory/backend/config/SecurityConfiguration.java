@@ -22,7 +22,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**" , "/api/v1/blockchain/**"};
+    private static final String[] WHITE_LIST_URL = {"/api/v1/**"};//{"/api/v1/auth/**" , "/api/v1/blockchain/**"};
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/v1/**").hasAnyRole(MANAGER.name())
+//                                .requestMatchers("/api/v1/**").hasAnyRole(MANAGER.name())
                                 .anyRequest()
                                 .authenticated()
                 )

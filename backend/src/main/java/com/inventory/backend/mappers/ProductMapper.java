@@ -25,16 +25,13 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
 
     @Override
     public Product toEntity(CreateProductRequest request) {
-        Optional<Organization> organization = Optional.ofNullable(organizationService.findById(request.getOrganizationId()));
         Optional<Category> category = Optional.ofNullable(categoryService.findById(request.getCategoryId()));
-        if (organization.isEmpty() || category.isEmpty()) return null;
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setImage(request.getImage());
         product.setCategory(category.get());
-        product.setOrganization(organization.get());
         return product;
     }
 
@@ -43,10 +40,6 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
         if (request.getCategoryId() != null) {
             Category category = categoryService.findById(request.getCategoryId());
             existingProduct.setCategory(category);
-        }
-        if (request.getOrganizationId() != null) {
-            Organization organization = organizationService.findById(request.getOrganizationId());
-            existingProduct.setOrganization(organization);
         }
         if (request.getName() != null) existingProduct.setName(request.getName());
         if (request.getDescription() != null) existingProduct.setDescription(request.getDescription());
@@ -62,19 +55,6 @@ public class ProductMapper implements Mapper<Product, CreateProductRequest, Upda
     }
 
 
-    public ProductResponse toResponse(Product product , Integer quantity) {
-        if (product == null) return null;
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                quantity,
-                product.getImage(),
-                product.getCategory() != null ? categoryMapper.toResponse(product.getCategory()) : null,
-                product.getOrganization() != null ? product.getOrganization() : null
-        );
-    }
 
     public List<ProductResponse> toResponseList(List<Product> products) {
         return products.stream()

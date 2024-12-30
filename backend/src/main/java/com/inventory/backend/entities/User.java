@@ -44,6 +44,7 @@ public class User implements UserDetails {
     private Organization organization;
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<Token> tokens;
 
 
