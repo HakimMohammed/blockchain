@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class GatewaySingleton {
 
     private static final String MSP_ID = System.getenv().getOrDefault("MSP_ID", "Org1MSP");
-    private static final Path CRYPTO_PATH = Paths.get("../network/organizations/peerOrganizations/org1.example.com");
+    private static final Path CRYPTO_PATH = Paths.get("../private-blockchain/network/organizations/peerOrganizations/org1.example.com");
     private static final Path CERT_DIR_PATH = CRYPTO_PATH.resolve(Paths.get("users/User1@org1.example.com/msp/signcerts"));
     private static final Path KEY_DIR_PATH = CRYPTO_PATH.resolve(Paths.get("users/User1@org1.example.com/msp/keystore"));
     private static final Path TLS_CERT_PATH = CRYPTO_PATH.resolve(Paths.get("peers/peer0.org1.example.com/tls/ca.crt"));

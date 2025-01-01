@@ -36,16 +36,15 @@
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-bom</artifactId>
-                <version>4.28.2</version>
+                <version>4.29.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <!-- gRPC BOM for versioning -->
             <dependency>
                 <groupId>io.grpc</groupId>
                 <artifactId>grpc-bom</artifactId>
-                <version>1.67.1</version>
+                <version>1.69.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -122,26 +121,25 @@
         <version>0.11.5</version>
         <scope>runtime</scope>
     </dependency>
-
-    <!-- Hyperledger Fabric Gateway -->
-    <dependency>
-        <groupId>org.hyperledger.fabric</groupId>
-        <artifactId>fabric-gateway</artifactId>
-        <version>1.7.0</version>
-    </dependency>
-
-    <!-- gRPC API -->
-    <dependency>
-        <groupId>io.grpc</groupId>
-        <artifactId>grpc-api</artifactId>
-    </dependency>
-
-    <!-- gRPC Netty (runtime dependency) -->
-    <dependency>
-        <groupId>io.grpc</groupId>
-        <artifactId>grpc-netty-shaded</artifactId>
-        <scope>runtime</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.hyperledger.fabric</groupId>
+            <artifactId>fabric-gateway</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hyperledger.fabric</groupId>
+            <artifactId>fabric-gateway-java</artifactId>
+            <version>2.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
     <!-- Protobuf Java dependency -->
     <dependency>

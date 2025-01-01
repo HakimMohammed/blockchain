@@ -5,9 +5,7 @@ import lombok.*;
 
 import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Organization {
