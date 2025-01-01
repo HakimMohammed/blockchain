@@ -2,21 +2,16 @@ package com.inventory.backend.controllers;
 
 import com.inventory.backend.dtos.product.ProductResponse;
 import com.inventory.backend.dtos.product.CreateProductRequest;
-import com.inventory.backend.dtos.product.UpdateProductRequest;
 import com.inventory.backend.entities.Product;
-import com.inventory.backend.entities.Category;
-import com.inventory.backend.entities.Organization;
 import com.inventory.backend.mappers.ProductMapper;
 import com.inventory.backend.services.ProductService;
-import com.inventory.backend.services.CategoryService;
-import com.inventory.backend.services.OrganizationService;
+import com.inventory.backend.sockets.WebSocketHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 

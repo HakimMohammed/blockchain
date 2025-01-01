@@ -26,21 +26,17 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryMapper categoryMapper;
     private final AuthenticationService authenticationService;
 
-    public ProductServiceImpl(ProductRepository productRepository,
-                              BlockchainService blockchainService,
-                              AuthenticationService authenticationService,
-                              CategoryMapper categoryMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, BlockchainService blockchainService, CategoryMapper categoryMapper, AuthenticationService authenticationService) {
         this.productRepository = productRepository;
         this.blockchainService = blockchainService;
-        this.authenticationService = authenticationService;
         this.categoryMapper = categoryMapper;
+        this.authenticationService = authenticationService;
     }
 
     @Override
     public List<ProductResponse> findAll() {
         try {
             Organization userOrganization = authenticationService.getAuthenticatedUser().getOrganization();
-            System.out.println("User organization name: " + userOrganization.getName());
             Inventory inventory = blockchainService.getInventory(userOrganization.getName());
             List<Product> products = productRepository.findAllByIdIn(inventory.stock().keySet());
             return products.stream()

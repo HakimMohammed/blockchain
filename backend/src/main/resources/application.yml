@@ -16,3 +16,4 @@ spring:
     refresh_token_expiration : 86400000 # 1 day
     expiration: 86400000 # 1 day
 
+
