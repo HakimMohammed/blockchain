@@ -88,3 +88,13 @@
     -fx-background-color: #357abd;
 }
 
+
+.notification-badge {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-padding: 2px 6px;
+    -fx-shape: "M0,0 h1 a1,1 0 0,1 1,1 v1 a1,1 0 0,1 -1,1 h-1 a1,1 0 0,1 -1,-1 v-1 a1,1 0 0,1 1,-1 z";
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-alignment: center;
+}

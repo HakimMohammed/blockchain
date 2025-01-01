@@ -12,19 +12,24 @@ module com.inventory.ui {
     requires org.kordamp.ikonli.feather;
     requires org.kordamp.ikonli.javafx;
     requires java.management;
+    requires java.net.http;
+    requires org.java_websocket;
 
     exports com.inventory.ui;
     exports com.inventory.ui.services;
     exports com.inventory.ui.models;
     exports com.inventory.ui.dtos.auth;
+    exports com.inventory.ui.dtos.company_demand;
     exports com.inventory.ui.dtos.exchange;
     exports com.inventory.ui.enums to com.fasterxml.jackson.databind;
 
     opens com.inventory.ui.controllers to javafx.fxml;
     opens com.inventory.ui.dtos.auth to com.fasterxml.jackson.databind; // Add this line to open the package to Jackson
+    opens com.inventory.ui.dtos.company_demand to com.fasterxml.jackson.databind; // Add this line to open the package to Jackson
     opens com.inventory.ui.auth to com.fasterxml.jackson.databind; // Add this line to open the package to Jackson
     opens com.inventory.ui to javafx.fxml;
     opens com.inventory.ui.services to javafx.fxml;
     opens com.inventory.ui.models to javafx.fxml , com.fasterxml.jackson.databind;
+    exports com.inventory.ui.sockets to javafx.graphics;
 
 }

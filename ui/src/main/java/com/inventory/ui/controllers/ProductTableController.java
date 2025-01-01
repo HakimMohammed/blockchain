@@ -1,9 +1,13 @@
 package com.inventory.ui.controllers;
 
+import com.inventory.ui.dtos.company_demand.CompanyDemandRequest;
+import com.inventory.ui.enums.DemandStatus;
 import com.inventory.ui.enums.OrganizationType;
+import com.inventory.ui.models.CompanyDemand;
 import com.inventory.ui.models.Organization;
 import com.inventory.ui.models.Product;
 import com.inventory.ui.services.AuthenticationService;
+import com.inventory.ui.services.CompanyDemandService;
 import com.inventory.ui.services.ExchangeService;
 import com.inventory.ui.services.ProductService;
 import com.inventory.ui.utils.DialogUtils;
@@ -24,6 +28,7 @@ public class ProductTableController {
     private final ProductService productService = ProductService.getInstance();
     private final AuthenticationService authenticationService = AuthenticationService.getInstance();
     private final Organization userOrganization = authenticationService.me().getOrganization();
+    private final CompanyDemandService companyDemandService = CompanyDemandService.getInstance();
     private static final int ITEMS_PER_PAGE = 10;
 
     @FXML
@@ -46,24 +51,25 @@ public class ProductTableController {
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("categoryName"));
 
-        productTable.getColumns().addAll(nameCol, descCol, priceCol, quantityCol, categoryCol);
+        productTable.getColumns().addAll(nameCol, descCol, priceCol, quantityCol, categoryCol, actionsCol);
 
         if (OrganizationType.SUPPLIER.equals(userOrganization.getType())) {
-            setupActionsColumn(actionsCol);
-            productTable.getColumns().add(actionsCol);
+            setupActionsColumn(actionsCol, "Send", this::showSendPopup);
+        } else if (OrganizationType.COMPANY.equals(userOrganization.getType())) {
+            setupActionsColumn(actionsCol, "Demand", this::showDemandPopup);
         }
 
         refreshTable();
     }
 
-    private void setupActionsColumn(TableColumn<Product, Void> actionsCol) {
+    private void setupActionsColumn(TableColumn<Product, Void> actionsCol, String buttonText, PopupHandler popupHandler) {
         actionsCol.setCellFactory(col -> new TableCell<>() {
-            private final Button sendButton = new Button("Send");
+            private final Button actionButton = new Button(buttonText);
 
             {
-                sendButton.setOnAction(event -> {
+                actionButton.setOnAction(event -> {
                     Product selectedProduct = getTableView().getItems().get(getIndex());
-                    showPopup(selectedProduct);
+                    popupHandler.showPopup(selectedProduct);
                 });
             }
 
@@ -73,58 +79,70 @@ public class ProductTableController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    if (OrganizationType.SUPPLIER.equals(userOrganization.getType())) {
-                        setGraphic(sendButton);
-                    } else {
-                        setGraphic(null);
-                    }
+                    setGraphic(actionButton);
                 }
             }
+        });
+    }
 
-            private void showPopup(Product product) {
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setTitle("Send Product");
+    private void showSendPopup(Product product) {
+        showPopup(product, "Send Product", "Error sending product", false);
+    }
 
-                Label productLabel = new Label("Product:");
-                TextField productField = new TextField(product.getName());
-                productField.setEditable(false);
+    private void showDemandPopup(Product product) {
+        showPopup(product, "Demand Product", "Error demanding product", true);
+    }
 
-                Label quantityLabel = new Label("Quantity:");
-                TextField quantityField = new TextField();
-                quantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.matches("\\d*")) {
-                        quantityField.setText(oldValue);
-                    }
-                });
+    private void showPopup(Product product, String title, String errorMessage, boolean isDemand) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(title);
 
-                GridPane gridPane = new GridPane();
-                gridPane.setHgap(10);
-                gridPane.setVgap(10);
-                gridPane.setPadding(new Insets(10));
-                gridPane.add(productLabel, 0, 0);
-                gridPane.add(productField, 1, 0);
-                gridPane.add(quantityLabel, 0, 1);
-                gridPane.add(quantityField, 1, 1);
+        Label productLabel = new Label("Product:");
+        TextField productField = new TextField(product.getName());
+        productField.setEditable(false);
 
-                dialog.getDialogPane().setContent(gridPane);
-                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Label quantityLabel = new Label("Quantity:");
+        TextField quantityField = new TextField();
+        quantityField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                quantityField.setText(oldValue);
+            }
+        });
 
-                dialog.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.OK) {
-                        String inputValue = quantityField.getText();
-                        if (!inputValue.isEmpty()) {
-                            int quantity = Integer.parseInt(inputValue);
-                            try {
-                                exchangeService.tradeProducts(userOrganization.getName(), product.getId().toString(), quantity);
-                                refreshTable();
-                            } catch (Exception e) {
-                                DialogUtils.showError("Error sending product", e.getMessage());
-                            }
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(10));
+        gridPane.add(productLabel, 0, 0);
+        gridPane.add(productField, 1, 0);
+        gridPane.add(quantityLabel, 0, 1);
+        gridPane.add(quantityField, 1, 1);
+
+        dialog.getDialogPane().setContent(gridPane);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                String inputValue = quantityField.getText();
+                if (!inputValue.isEmpty()) {
+                    int quantity = Integer.parseInt(inputValue);
+                    try {
+                        if (isDemand) {
+                            CompanyDemandRequest companyDemand = new CompanyDemandRequest();
+                            companyDemand.setProductId(product.getId());
+                            companyDemand.setQuantity(quantity);
+                            companyDemand.setStatus(DemandStatus.PENDING);
+                            companyDemandService.create(companyDemand);
                         } else {
-                            DialogUtils.showError("Error sending product", "Please enter a valid quantity");
+                            exchangeService.tradeProducts(userOrganization.getName(), product.getId().toString(), quantity);
                         }
+                        refreshTable();
+                    } catch (Exception e) {
+                        DialogUtils.showError(errorMessage, e.getMessage());
                     }
-                });
+                } else {
+                    DialogUtils.showError(errorMessage, "Please enter a valid quantity");
+                }
             }
         });
     }
@@ -144,5 +162,10 @@ public class ProductTableController {
     private void refreshTable() {
         pagination.setPageCount((productService.getTotalProducts() + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE);
         createPage(pagination.getCurrentPageIndex());
+    }
+
+    @FunctionalInterface
+    private interface PopupHandler {
+        void showPopup(Product product);
     }
 }
