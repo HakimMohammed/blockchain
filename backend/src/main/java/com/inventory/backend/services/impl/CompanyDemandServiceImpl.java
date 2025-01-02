@@ -8,6 +8,7 @@ import com.inventory.backend.entities.CompanyDemand;
 import com.inventory.backend.entities.Organization;
 import com.inventory.backend.entities.Product;
 import com.inventory.backend.entities.User;
+import com.inventory.backend.enums.DemandStatus;
 import com.inventory.backend.mappers.CompanyDemandMapper;
 import com.inventory.backend.repos.CompanyDemandRepository;
 import com.inventory.backend.repos.OrganizationRepository;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,12 +53,13 @@ public class CompanyDemandServiceImpl implements DemandService {
 
     @Override
     public CompanyDemand updateById(UUID id, CompanyDemand companyDemand) {
-        if (companyDemandRepository.existsById(id)) {
-            User user = authenticationService.getAuthenticatedUser();
-            companyDemand.setCompany(user.getOrganization());
-            return companyDemandRepository.save(companyDemand);
+        Optional<CompanyDemand> cd = companyDemandRepository.findById(id);
+        if (cd.isPresent()) {
+            CompanyDemand existingCompanyDemand = cd.get();
+            existingCompanyDemand.setStatus(DemandStatus.ACCEPTED);
+            return companyDemandRepository.save(existingCompanyDemand);
         }
-        return null;
+        return companyDemandRepository.save(companyDemand);
     }
 
     @Override

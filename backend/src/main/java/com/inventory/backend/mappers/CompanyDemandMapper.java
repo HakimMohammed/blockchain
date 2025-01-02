@@ -60,9 +60,9 @@ public class CompanyDemandMapper implements Mapper<CompanyDemand, CompanyDemandC
         CompanyDemandResponse response = new CompanyDemandResponse();
         response.setId(companyDemand.getId());
         response.setQuantity(companyDemand.getQuantity());
-        response.setProduct(companyDemand.getProduct());
-        response.setCompany(companyDemand.getCompany());
-        response.setSupplier(companyDemand.getSupplier());
+        response.setProductName(companyDemand.getProduct().getName());
+        response.setCompanyName(companyDemand.getCompany().getName());
+        response.setSupplierName(companyDemand.getSupplier().getName());
         response.setStatus(companyDemand.getStatus());
         return response;
     }

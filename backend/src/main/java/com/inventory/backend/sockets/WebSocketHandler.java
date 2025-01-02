@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class WebSocketHandler extends TextWebSocketHandler {
 
-    private static Set<WebSocketSession> sessions = new HashSet<>();
+    private static final Set<WebSocketSession> sessions = new HashSet<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -31,7 +31,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
 
-    public static void sendNotification(String message) {
+    public void sendNotification(String message) {
         TextMessage textMessage = new TextMessage(message);
         for (WebSocketSession webSocketSession : sessions) {
             if (webSocketSession.isOpen()) {

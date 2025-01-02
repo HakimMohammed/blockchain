@@ -8,6 +8,9 @@ import lombok.Data;
 
 @Data
 public class CompanyDemandUpdate {
+
+    private UUID id;
+
     @Min(1)
     private int quantity;
 

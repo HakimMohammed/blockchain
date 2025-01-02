@@ -1,5 +1,7 @@
 package com.inventory.backend.dtos.company_demands;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.inventory.backend.entities.Organization;
 import com.inventory.backend.entities.Product;
 import com.inventory.backend.enums.DemandStatus;
@@ -10,8 +12,8 @@ import lombok.Data;
 public class CompanyDemandResponse {
     private UUID id;
     private int quantity;
-    private Product product;
-    private Organization company;
-    private Organization supplier;
+    private String productName;
+    private String companyName;
+    private String supplierName;
     private DemandStatus status;
 }

@@ -2,6 +2,7 @@ package com.inventory.backend.controllers;
 
 import com.inventory.backend.dtos.company_demands.CompanyDemandCreate;
 import com.inventory.backend.dtos.company_demands.CompanyDemandResponse;
+import com.inventory.backend.entities.CompanyDemand;
 import com.inventory.backend.entities.Organization;
 import com.inventory.backend.entities.Product;
 import com.inventory.backend.mappers.CompanyDemandMapper;
@@ -37,17 +38,16 @@ public class CompanyDemandController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyDemandResponse> updateById(@PathVariable UUID id, @RequestBody CompanyDemandCreate companyDemandResponse) {
-        return ResponseEntity.ok(companyDemandMapper.toResponse(demandService.updateById(id, companyDemandMapper.toEntity(companyDemandResponse))));
+    public ResponseEntity<CompanyDemandResponse> updateById(@PathVariable UUID id) {
+        return ResponseEntity.ok(companyDemandMapper.toResponse(demandService.updateById(id ,null)));
     }
-
-    // only the company can create a demand
 
     @PostMapping
     public ResponseEntity<CompanyDemandResponse> save(@RequestBody CompanyDemandCreate companyDemandCreate) {
         Product product = productService.findById(companyDemandCreate.getProductId());
-        webSocketHandler.sendNotification("Company has demanded " + companyDemandCreate.getQuantity() + " " + product.getName());
-        return ResponseEntity.ok(companyDemandMapper.toResponse(demandService.save(companyDemandMapper.toEntity(companyDemandCreate, product))));
+        CompanyDemand companyDemand = demandService.save(companyDemandMapper.toEntity(companyDemandCreate, product));
+        webSocketHandler.sendNotification("Company has demanded " + companyDemandCreate.getQuantity() + " " + product.getName() + " with id " + companyDemand.getId());
+        return ResponseEntity.ok(companyDemandMapper.toResponse(companyDemand));
     }
 
     @DeleteMapping("/{id}")
