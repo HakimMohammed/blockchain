@@ -15,8 +15,8 @@ import java.util.UUID;
 public class CompanyDemand {
     private UUID id;
     private int quantity;
-    private Product product;
-    private Organization company;
-    private Organization supplier;
+    private String productName;
+    private String companyName;
+    private String supplierName;
     private DemandStatus status;
 }

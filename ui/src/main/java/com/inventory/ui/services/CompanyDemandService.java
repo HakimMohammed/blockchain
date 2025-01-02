@@ -8,6 +8,7 @@ import okhttp3.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CompanyDemandService {
     private static CompanyDemandService instance;
@@ -30,8 +31,8 @@ public class CompanyDemandService {
             if (response.isSuccessful()) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String responseBody = response.body().string();
-                List<CompanyDemand> companyDemands = objectMapper.readValue(responseBody, new TypeReference<List<CompanyDemand>>() {});
-                return companyDemands;
+                return objectMapper.readValue(responseBody, new TypeReference<List<CompanyDemand>>() {
+                });
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -42,6 +43,16 @@ public class CompanyDemandService {
     public boolean create(CompanyDemandRequest companyDemandCreate) {
         try {
             Response response = httpService.post("company-demands", companyDemandCreate);
+            return response.isSuccessful();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean update(UUID id) {
+        try {
+            Response response = httpService.put("company-demands/" + id , null);
             return response.isSuccessful();
         } catch (Exception e) {
             System.out.println(e.getMessage());

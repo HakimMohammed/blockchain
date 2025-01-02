@@ -67,6 +67,10 @@ public class ProductTableController {
             private final Button actionButton = new Button(buttonText);
 
             {
+                actionButton.setStyle("-fx-text-fill: #ffffff;-fx-background-color: #636c81");
+            }
+
+            {
                 actionButton.setOnAction(event -> {
                     Product selectedProduct = getTableView().getItems().get(getIndex());
                     popupHandler.showPopup(selectedProduct);

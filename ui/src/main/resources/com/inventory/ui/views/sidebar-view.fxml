@@ -20,8 +20,8 @@
             styleClass="nav-button,flat-button"
             maxWidth="Infinity"/>
 
-    <Button fx:id="settingsButton"
-            text="Settings"
+    <Button fx:id="reportsButton"
+            text="Report"
             styleClass="nav-button,flat-button"
             maxWidth="Infinity"/>
 

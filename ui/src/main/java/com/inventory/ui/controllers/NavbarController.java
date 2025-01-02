@@ -1,8 +1,11 @@
 package com.inventory.ui.controllers;
 
+import com.inventory.ui.dtos.company_demand.CompanyDemandRequest;
+import com.inventory.ui.enums.DemandStatus;
 import com.inventory.ui.enums.OrganizationType;
 import com.inventory.ui.models.User;
 import com.inventory.ui.services.AuthenticationService;
+import com.inventory.ui.services.CompanyDemandService;
 import com.inventory.ui.services.UILoaderService;
 import com.inventory.ui.sockets.WebSocketNotificationClient;
 import javafx.animation.FadeTransition;
@@ -22,6 +25,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NavbarController {
 
@@ -37,12 +43,9 @@ public class NavbarController {
     private int notificationCount = 0;
     private final List<String> notifications = new ArrayList<>();
 
-    private final AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService = AuthenticationService.getInstance();
+    private final CompanyDemandService companyDemandService = CompanyDemandService.getInstance();
 
-
-    public NavbarController() {
-        this.authenticationService = new AuthenticationService();
-    }
 
     @FXML
     private void initialize() {
@@ -124,7 +127,6 @@ public class NavbarController {
         StackPane stackPane = new StackPane(notificationIcon, notificationBadge);
         notificationsButton.setGraphic(stackPane);
         notificationsButton.setOnMouseClicked(event -> {
-            // Handle notification button click
             notificationCount = 0;
             updateNotificationBadge();
             showNotificationsDialog();
@@ -157,10 +159,21 @@ public class NavbarController {
         for (String notification : notifications) {
             HBox notificationItem = new HBox(10);
             Label notificationLabel = new Label(notification);
-            Button doneButton = new Button("Done");
+            Button doneButton = new Button();
+            FontIcon doneIcon = new FontIcon(Feather.CHECK);
+            doneButton.setStyle("-fx-background-color: #2B55D5");
+            doneButton.setGraphic(doneIcon);
             doneButton.setOnAction(event -> {
                 notifications.remove(notification);
                 content.getChildren().remove(notificationItem);
+                String regex = "with id ([\\w-]+)";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(notification);
+
+                if (matcher.find()) {
+                    UUID demandId = UUID.fromString(matcher.group(1)); // Extracts the demand ID
+                    companyDemandService.update(demandId);
+                }
                 updateNotificationBadge();
             });
             notificationItem.getChildren().addAll(notificationLabel, doneButton);

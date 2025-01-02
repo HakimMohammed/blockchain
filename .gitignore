@@ -10,12 +10,6 @@ README.md
 **/build/
 **/.gradle/
 **/.idea/
-network/bin/
-network/builders/
-network/channel-artifacts/
-network/config/
-network/organizations/ordererOrganizations/
-network/organizations/peerOrganizations/
 network/stock.tar.gz
 network/system-genesis-block/genesis.block
 network/chaincode/java/stock/build

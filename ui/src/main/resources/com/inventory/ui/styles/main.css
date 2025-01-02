@@ -24,7 +24,6 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: #3498db;
     -fx-text-fill: white;
 }
 
@@ -34,16 +33,16 @@
 }
 
 .nav-button:hover {
-    -fx-background-color: #4993e7;
+    -fx-background-color: #2B55D5;
 }
 
 .create-button {
-    -fx-background-color: #3498db;
+    -fx-background-color: #2B55D5;
     -fx-text-fill: white;
 }
 
 .create-button:hover {
-    -fx-background-color: #2980b9;
+    -fx-background-color: #2056ff;
 }
 
 .button {
@@ -56,8 +55,8 @@
 }
 
 .selected-button {
-    background-color: #2980b9;
-    -fx-background-color: #2980b9;
+    background-color: #2056ff;
+    -fx-background-color: #2056ff;
     -fx-text-fill: white;
 }
 
@@ -69,4 +68,23 @@
     -fx-min-width: 20px;
     -fx-min-height: 20px;
     -fx-alignment: center;
+}
+
+
+.chart-bar {
+    -fx-bar-fill: #2B55D5; /* Steel blue bars */
+}
+
+.chart-pie {
+    -fx-pie-color: derive(#2B55D5, 20%),
+    derive(#1540c2, -20%);
+}
+
+.axis {
+    -fx-tick-label-fill: #1C1C1C; /* Dark tick labels */
+    -fx-label-fill: #1C1C1C;      /* Dark axis labels */
+}
+
+.chart-title {
+    -fx-text-fill: #1C1C1C; /* Dark chart titles */
 }
