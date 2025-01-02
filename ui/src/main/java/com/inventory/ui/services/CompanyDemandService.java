@@ -51,6 +51,7 @@ public class CompanyDemandService {
     }
 
     public boolean update(UUID id) {
+        System.out.println("CompanyDemandService.update");
         try {
             Response response = httpService.put("company-demands/" + id , null);
             return response.isSuccessful();

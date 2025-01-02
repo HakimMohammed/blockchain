@@ -14,6 +14,7 @@ module com.inventory.ui {
     requires java.management;
     requires java.net.http;
     requires org.java_websocket;
+    requires org.jetbrains.annotations;
 
     exports com.inventory.ui;
     exports com.inventory.ui.services;

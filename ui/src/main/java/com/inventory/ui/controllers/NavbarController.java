@@ -1,8 +1,8 @@
 package com.inventory.ui.controllers;
 
-import com.inventory.ui.dtos.company_demand.CompanyDemandRequest;
 import com.inventory.ui.enums.DemandStatus;
 import com.inventory.ui.enums.OrganizationType;
+import com.inventory.ui.models.CompanyDemand;
 import com.inventory.ui.models.User;
 import com.inventory.ui.services.AuthenticationService;
 import com.inventory.ui.services.CompanyDemandService;
@@ -17,7 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -38,14 +38,12 @@ public class NavbarController {
     @FXML
     private Button logoutButton;
 
-
     private Label notificationBadge;
     private int notificationCount = 0;
     private final List<String> notifications = new ArrayList<>();
 
     private final AuthenticationService authenticationService = AuthenticationService.getInstance();
     private final CompanyDemandService companyDemandService = CompanyDemandService.getInstance();
-
 
     @FXML
     private void initialize() {
@@ -55,6 +53,7 @@ public class NavbarController {
         } else {
             notificationsButton.setGraphic(new FontIcon(Feather.BELL));
             setupNotificationButton();
+            loadInitialNotifications();
         }
         profileButton.setGraphic(new FontIcon(Feather.USER));
         profileButton.setOnAction(event -> showUserProfileDialog());
@@ -67,7 +66,19 @@ public class NavbarController {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
 
+    private void loadInitialNotifications() {
+        List<CompanyDemand> companyDemands = companyDemandService.findAll();
+        for (CompanyDemand demand : companyDemands) {
+            if (demand.getStatus() != DemandStatus.ACCEPTED) {
+                String notification = "New demand from " + demand.getCompanyName() + " with quantity " + demand.getQuantity() + " for product " + demand.getProductName()
+                        + " with id " + demand.getId();
+                notifications.add(notification);
+                notificationCount++;
+            }
+        }
+        updateNotificationBadge();
     }
 
     private void showUserProfileDialog() {
@@ -117,7 +128,6 @@ public class NavbarController {
         UILoaderService.loadLogin();
     }
 
-
     private void setupNotificationButton() {
         notificationBadge = new Label();
         notificationBadge.getStyleClass().add("notification-badge");
@@ -133,11 +143,10 @@ public class NavbarController {
         });
     }
 
-
     private void incrementNotificationCount(String message) {
         Platform.runLater(() -> {
-            notificationCount++;
             notifications.add(message);
+            notificationCount++;
             updateNotificationBadge();
         });
     }
@@ -156,26 +165,20 @@ public class NavbarController {
         dialog.setTitle("Notifications");
 
         VBox content = new VBox(10);
+        content.setPadding(new Insets(20)); // Add padding to the VBox
         for (String notification : notifications) {
             HBox notificationItem = new HBox(10);
             Label notificationLabel = new Label(notification);
-            Button doneButton = new Button();
-            FontIcon doneIcon = new FontIcon(Feather.CHECK);
-            doneButton.setStyle("-fx-background-color: #2B55D5");
-            doneButton.setGraphic(doneIcon);
-            doneButton.setOnAction(event -> {
-                notifications.remove(notification);
-                content.getChildren().remove(notificationItem);
-                String regex = "with id ([\\w-]+)";
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(notification);
+            String regex = "with id ([\\w-]+)";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(notification);
 
-                if (matcher.find()) {
-                    UUID demandId = UUID.fromString(matcher.group(1)); // Extracts the demand ID
-                    companyDemandService.update(demandId);
-                }
-                updateNotificationBadge();
-            });
+            if (matcher.find()) {
+                String demandId = matcher.group(1); // Extracts the demand ID
+                notificationItem.setId(demandId); // Set the ID of the notification item
+            }
+
+            Button doneButton = getButton(notification, content, notificationItem);
             notificationItem.getChildren().addAll(notificationLabel, doneButton);
             content.getChildren().add(notificationItem);
         }
@@ -184,5 +187,19 @@ public class NavbarController {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
         dialog.showAndWait();
+    }
+
+    private @NotNull Button getButton(String notification, VBox content, HBox notificationItem) {
+        Button doneButton = new Button();
+        FontIcon doneIcon = new FontIcon(Feather.CHECK);
+        doneButton.setStyle("-fx-background-color: #2B55D5");
+        doneButton.setGraphic(doneIcon);
+        doneButton.setOnAction(event -> {
+            notifications.remove(notification);
+            content.getChildren().remove(notificationItem);
+            companyDemandService.update(UUID.fromString(notificationItem.getId())); // Use the ID of the notification item
+            updateNotificationBadge();
+        });
+        return doneButton;
     }
 }
