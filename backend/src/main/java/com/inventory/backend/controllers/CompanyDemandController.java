@@ -39,14 +39,16 @@ public class CompanyDemandController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CompanyDemandResponse> updateById(@PathVariable UUID id) {
-        return ResponseEntity.ok(companyDemandMapper.toResponse(demandService.updateById(id ,null)));
+        return ResponseEntity.ok(companyDemandMapper.toResponse(demandService.updateById(id, null)));
     }
 
     @PostMapping
     public ResponseEntity<CompanyDemandResponse> save(@RequestBody CompanyDemandCreate companyDemandCreate) {
         Product product = productService.findById(companyDemandCreate.getProductId());
         CompanyDemand companyDemand = demandService.save(companyDemandMapper.toEntity(companyDemandCreate, product));
-        webSocketHandler.sendNotification("Company has demanded " + companyDemandCreate.getQuantity() + " " + product.getName() + " with id " + companyDemand.getId());
+        String notification = "New demand from company with quantity " + companyDemandCreate.getQuantity() + " for product " + product.getName() + " with id " + companyDemand.getId();
+        webSocketHandler.sendNotification(notification);
+        //"Company has demanded " + companyDemandCreate.getQuantity() + " " + product.getName() + " with id " + companyDemand.getId()
         return ResponseEntity.ok(companyDemandMapper.toResponse(companyDemand));
     }
 
