@@ -57,7 +57,7 @@ public class TransactionReportServiceImpl implements TransactionReportService {
                                 .setBold()
                 );
             } else {
-                Table table = new Table(6);
+                Table table = new Table(7);
                 table.addHeaderCell(new Cell().add(new Paragraph("Exchange ID").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
                 table.addHeaderCell(new Cell().add(new Paragraph("Product").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
                 table.addHeaderCell(new Cell().add(new Paragraph("Sender").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
