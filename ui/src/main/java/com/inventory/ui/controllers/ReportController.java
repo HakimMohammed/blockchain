@@ -4,7 +4,9 @@ import com.inventory.ui.enums.DemandStatus;
 import com.inventory.ui.enums.OrganizationType;
 import com.inventory.ui.models.CompanyDemand;
 import com.inventory.ui.models.Exchange;
+import com.inventory.ui.models.User;
 import com.inventory.ui.services.*;
+import com.inventory.ui.utils.Env;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
@@ -14,6 +16,7 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.File;
 import java.util.List;
 
 public class ReportController {
@@ -66,7 +69,7 @@ public class ReportController {
     }
 
     private List<Exchange> getMockExchanges() {
-        return exchangeService.getExchanges(0 , 10);
+        return exchangeService.getExchanges(0, 10);
     }
 
     private List<CompanyDemand> getMockCompanyDemands() {
@@ -75,13 +78,26 @@ public class ReportController {
 
     @FXML
     private void downloadPdf() {
-        // PDF URL to be downloaded (example)
-        String pdfFileUrl = "https://mag.wcoomd.org/uploads/2018/05/blank.pdf";
+        User user = authenticationService.me();
+        String organizationName = user.getOrganization().getName();
+        String timestamp = String.valueOf(System.currentTimeMillis());
 
-        // Get the primary stage (can be passed from your main application or controller)
         Stage stage = (Stage) downloadButton.getScene().getWindow();
 
-        // Trigger the download
-        DownloadPDFService.downloadPdfFromUrl(pdfFileUrl, stage);
+        String pdfFileUrl = Env.get("API_URL") + "reports/transaction-report-" + organizationName + timestamp + ".pdf";
+        PDFDownloaderService downloader = new PDFDownloaderService(pdfFileUrl, stage);
+
+        // debug
+        downloader.setOnSucceeded(event -> {
+            File downloadedFile = downloader.getValue();
+            System.out.println("Downloaded to: " + downloadedFile.getAbsolutePath());
+        });
+
+        downloader.setOnFailed(event -> {
+            Throwable exception = downloader.getException();
+            System.err.println("Download failed: " + exception.getMessage());
+        });
+
+        downloader.start();
     }
 }
