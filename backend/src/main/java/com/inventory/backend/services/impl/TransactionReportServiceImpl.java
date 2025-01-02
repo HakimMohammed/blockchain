@@ -59,8 +59,9 @@ public class TransactionReportServiceImpl implements TransactionReportService {
             } else {
                 Table table = new Table(6);
                 table.addHeaderCell(new Cell().add(new Paragraph("Exchange ID").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
-                table.addHeaderCell(new Cell().add(new Paragraph("Product ID").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
-                table.addHeaderCell(new Cell().add(new Paragraph("Organization").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
+                table.addHeaderCell(new Cell().add(new Paragraph("Product").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
+                table.addHeaderCell(new Cell().add(new Paragraph("Sender").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
+                table.addHeaderCell(new Cell().add(new Paragraph("Receiver").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
                 table.addHeaderCell(new Cell().add(new Paragraph("Quantity").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
                 table.addHeaderCell(new Cell().add(new Paragraph("Date").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
                 table.addHeaderCell(new Cell().add(new Paragraph("Transaction").setBold().setFontColor(ColorConstants.WHITE)).setBackgroundColor(ColorConstants.BLACK));
@@ -70,6 +71,7 @@ public class TransactionReportServiceImpl implements TransactionReportService {
                     table.addCell(exchange.exchange_id());
                     table.addCell(product.getName());
                     table.addCell(exchange.organization());
+                    table.addCell("Company");
                     table.addCell(String.valueOf(exchange.quantity()));
                     table.addCell(exchange.date());
                     table.addCell(exchange.transaction().name());
