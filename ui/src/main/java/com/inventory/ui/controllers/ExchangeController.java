@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class ExchangeController {
     @FXML
@@ -29,7 +30,7 @@ public class ExchangeController {
     }
 
     private void setupTable() {
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         TableColumn<Exchange, String> productNameCol = new TableColumn<>("Product Name");
@@ -41,11 +42,7 @@ public class ExchangeController {
         organizationCol.setCellValueFactory(new PropertyValueFactory<>("organization"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         transactionCol.setCellValueFactory(new PropertyValueFactory<>("transaction"));
-        dateCol.setCellValueFactory(cellData -> {
-            Exchange exchange = cellData.getValue();
-            LocalDateTime date = LocalDateTime.parse(exchange.getDate(), inputFormatter);
-            return new SimpleStringProperty(date.format(outputFormatter));
-        });
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         productNameCol.setCellValueFactory(cellData -> {
             Exchange exchange = cellData.getValue();
             Product product = productService.getProducts().stream().filter(p -> p.getId().equals(exchange.getProduct_id())).findFirst().orElse(null);
