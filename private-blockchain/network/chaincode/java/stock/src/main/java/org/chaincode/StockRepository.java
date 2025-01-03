@@ -47,7 +47,7 @@ public final class StockRepository implements ContractInterface {
     public void initLedger(final Context ctx) {
         putInventory(ctx, new Inventory("supplier", "supplier", new LinkedHashMap<>(Map.of(product1Id, 500, product3Id, 800 , product2Id , 1000 , product4Id , 2000))));
         putInventory(ctx, new Inventory("company", "company", new LinkedHashMap<>(Map.of(product1Id, 100, product2Id, 200 ))));
-        String timestamp = "2024-01-01 00:00:00 UTC";
+        String timestamp = "2024-01-01";
         putExchange(ctx, new Exchange("exchange1", product1Id, "supplier", 100, timestamp, TransactionType.SEND));
         putExchange(ctx, new Exchange("exchange2", product1Id, "company", 100, timestamp, TransactionType.RECEIVE));
         putExchange(ctx, new Exchange("exchange3", product3Id, "supplier", 200, timestamp, TransactionType.SEND));
@@ -57,10 +57,10 @@ public final class StockRepository implements ContractInterface {
     @Transaction()
     public void test(final Context ctx) {
         System.out.println("Test Started");
-        String timestamp = "2024-01-01 00:00:00 UTC";
+        String timestamp = "2024-01-01";
         Exchange exchange = createExchange(ctx, "exchange-test-1", product1Id, "supplier1", 100, timestamp, TransactionType.SEND);
         System.out.println("Exchange created: " + exchange);
-        System.out.println("Test FInished");
+        System.out.println("Test Finished");
     }
 
     @Transaction()
@@ -186,7 +186,6 @@ public final class StockRepository implements ContractInterface {
         Inventory inventory = genson.deserialize(inventoryState, Inventory.class);
         Map<UUID, Integer> stock = inventory.getStock();
 
-        // if product_id does not exist in inventory
         if (!stock.containsKey(product_id)) {
             if (transactionType == TransactionType.SEND) {
                 String errorMessage = String.format("Product %s does not exist in inventory", product_id);
@@ -232,7 +231,7 @@ public final class StockRepository implements ContractInterface {
         UUID product = UUID.fromString(product_id);
         System.out.println("Trading " + quantity + " of " + product_id + " from " + sender + " to " + receiver);
 
-        String timestamp = "2024-01-01 00:00:00 UTC";
+        String timestamp = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         int exchangeCounter = getExchangeCount(ctx);
         String exchangeIdBase = String.format("%s-%s-%s-%d-%d", sender, receiver, product_id, quantity, exchangeCounter);
         createExchange(ctx, "exchange-send-" + exchangeIdBase, product, sender, quantity, timestamp, TransactionType.SEND);
