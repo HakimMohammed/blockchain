@@ -10,7 +10,7 @@
       spacing="10"
       prefWidth="200">
 
-    <Button fx:id="ExchangesButton"
+    <Button fx:id="exchangesButton"
             text="Exchanges"
             styleClass="nav-button,flat-button"
             maxWidth="Infinity"/>

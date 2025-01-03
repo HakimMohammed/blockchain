@@ -15,7 +15,7 @@ import java.util.Objects;
 public class UILoaderService {
 
     @Setter
-    private static Stage primaryStage; // Hold reference to the primary stage
+    private static Stage primaryStage;
 
 
     public static void loadLogin() {

@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class AuthSession {
-    // Getter and setter methods
     @JsonProperty("access_token")
     private String accessToken;
     @JsonProperty("refresh_token")

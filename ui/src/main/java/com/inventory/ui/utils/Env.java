@@ -14,7 +14,7 @@ public class Env {
         try (BufferedReader reader = new BufferedReader(new FileReader(ENV_FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.trim().startsWith("#") && line.contains("=")) { // Skip comments
+                if (!line.trim().startsWith("#") && line.contains("=")) {
                     String[] parts = line.split("=", 2);
                     String key = parts[0].trim();
                     String value = parts[1].trim();

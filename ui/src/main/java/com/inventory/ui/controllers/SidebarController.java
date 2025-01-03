@@ -12,7 +12,7 @@ public class SidebarController {
     private DashboardController dashboardController;
 
     @FXML
-    private Button ExchangesButton;
+    private Button exchangesButton;
     @FXML
     private Button productsButton;
 
@@ -23,10 +23,10 @@ public class SidebarController {
 
     @FXML
     private void initialize() {
-        setupButton(ExchangesButton, Feather.REFRESH_CCW, "exchange-table-view.fxml");
+        setupButton(exchangesButton, Feather.REFRESH_CCW, "exchange-table-view.fxml");
         setupButton(productsButton, Feather.PACKAGE, "product-table-view.fxml");
         setupButton(reportsButton, Feather.FILE_TEXT, "report-view.fxml");
-        markSelectedButton(ExchangesButton); // Set ExchangesButton as the default selected button
+        markSelectedButton(productsButton);
     }
 
     private void setupButton(Button button, Feather icon, String page) {

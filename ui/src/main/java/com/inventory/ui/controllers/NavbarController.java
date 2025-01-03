@@ -165,7 +165,7 @@ public class NavbarController {
         dialog.setTitle("Notifications");
 
         VBox content = new VBox(10);
-        content.setPadding(new Insets(20)); // Add padding to the VBox
+        content.setPadding(new Insets(20));
         for (String notification : notifications) {
             HBox notificationItem = new HBox(10);
             Label notificationLabel = new Label(notification);
@@ -174,8 +174,8 @@ public class NavbarController {
             Matcher matcher = pattern.matcher(notification);
 
             if (matcher.find()) {
-                String demandId = matcher.group(1); // Extracts the demand ID
-                notificationItem.setId(demandId); // Set the ID of the notification item
+                String demandId = matcher.group(1);
+                notificationItem.setId(demandId);
             }
 
             Button doneButton = getButton(notification, content, notificationItem);
@@ -197,7 +197,7 @@ public class NavbarController {
         doneButton.setOnAction(event -> {
             notifications.remove(notification);
             content.getChildren().remove(notificationItem);
-            companyDemandService.update(UUID.fromString(notificationItem.getId())); // Use the ID of the notification item
+            companyDemandService.update(UUID.fromString(notificationItem.getId()));
             updateNotificationBadge();
         });
         return doneButton;

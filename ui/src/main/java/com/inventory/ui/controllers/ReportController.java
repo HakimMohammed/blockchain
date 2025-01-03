@@ -87,7 +87,6 @@ public class ReportController {
         String pdfFileUrl = Env.get("API_URL") + "reports/transaction-report-" + organizationName + timestamp + ".pdf";
         PDFDownloaderService downloader = new PDFDownloaderService(pdfFileUrl, stage);
 
-        // debug
         downloader.setOnSucceeded(event -> {
             File downloadedFile = downloader.getValue();
             System.out.println("Downloaded to: " + downloadedFile.getAbsolutePath());
