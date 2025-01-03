@@ -12,6 +12,6 @@ public record Inventory(String inventory_id, String organization, Map<UUID, Inte
                      @JsonProperty("stock") final Map<UUID, Integer> stock) {
         this.inventory_id = inventory_id;
         this.organization = organization;
-        this.stock = new TreeMap<>(stock); // Ensures the stock is always sorted
+        this.stock = new TreeMap<>(stock);
     }
 }

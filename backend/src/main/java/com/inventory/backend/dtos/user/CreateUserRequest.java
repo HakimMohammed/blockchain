@@ -33,7 +33,7 @@ public class CreateUserRequest {
     private String password;
 
     @NotBlank(message = "Role is required")
-    private String role;  // Role is a String that will be converted to the enum (UserRole)
+    private String role;
 
     @NotNull(message = "Organization ID is required")
     private UUID organizationId;

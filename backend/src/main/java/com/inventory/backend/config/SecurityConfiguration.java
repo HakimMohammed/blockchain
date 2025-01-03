@@ -24,8 +24,8 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/auth/**",
-            "/ws/**" ,// Allow WebSocket connections
-            "/notifications" //
+            "/ws/**" ,
+            "/notifications"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

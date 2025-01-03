@@ -32,7 +32,7 @@ public class BlockchainController {
     public ResponseEntity<List<Exchange>> getExchangesByOrganization(@RequestParam String organization) {
         try {
             List<Exchange> exchanges = blockchainService.getExchangesByOrganization(organization);
-            return ResponseEntity.ok(exchanges);  // Return List of Exchange objects directly
+            return ResponseEntity.ok(exchanges);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -43,7 +43,7 @@ public class BlockchainController {
     public ResponseEntity<Inventory> getInventory(@RequestParam String inventory) {
         try {
             Inventory inventoryData = blockchainService.getInventory(inventory);
-            return ResponseEntity.ok(inventoryData);  // Return Inventory object directly
+            return ResponseEntity.ok(inventoryData);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
@@ -53,7 +53,7 @@ public class BlockchainController {
     public ResponseEntity<Exchange> getExchange(@PathVariable String exchange) {
         try {
             Exchange exchangeData = blockchainService.getExchange(exchange);
-            return ResponseEntity.ok(exchangeData);  // Return Exchange object directly
+            return ResponseEntity.ok(exchangeData);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

@@ -48,7 +48,6 @@ public class CompanyDemandController {
         CompanyDemand companyDemand = demandService.save(companyDemandMapper.toEntity(companyDemandCreate, product));
         String notification = "New demand from company with quantity " + companyDemandCreate.getQuantity() + " for product " + product.getName() + " with id " + companyDemand.getId();
         webSocketHandler.sendNotification(notification);
-        //"Company has demanded " + companyDemandCreate.getQuantity() + " " + product.getName() + " with id " + companyDemand.getId()
         return ResponseEntity.ok(companyDemandMapper.toResponse(companyDemand));
     }
 

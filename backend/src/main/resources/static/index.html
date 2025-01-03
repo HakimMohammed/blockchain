@@ -7,7 +7,6 @@
 
     socket.onmessage = function(event) {
         const messageData = JSON.parse(event.data);
-        // Handle incoming message data
         console.log("Received message:", messageData);
     };
 

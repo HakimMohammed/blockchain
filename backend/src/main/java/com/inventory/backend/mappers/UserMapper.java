@@ -25,19 +25,17 @@ public class UserMapper {
         return user;
     }
 
-    // Map CreateUserRequest to User entity
     public User toEntity(CreateUserRequest request, Organization organization) {
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        user.setRole(Role.valueOf(request.getRole().toUpperCase()));  // Convert role to enum
-        user.setOrganization(organization);  // Set the organization
+        user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+        user.setOrganization(organization);
         return user;
     }
 
-    // Map UpdateUserRequest to existing User entity
     public User toEntity(UpdateUserRequest request, User existingUser, Organization organization) {
         if (request.getFirstName() != null) existingUser.setFirstName(request.getFirstName());
         if (request.getLastName() != null) existingUser.setLastName(request.getLastName());
@@ -48,7 +46,6 @@ public class UserMapper {
         return existingUser;
     }
 
-    // Map User entity to UserResponse DTO
     public UserResponse toResponse(User user) {
         if (user == null) return null;
         return new UserResponse(
@@ -61,7 +58,6 @@ public class UserMapper {
         );
     }
 
-    // Map list of User entities to list of UserResponse DTOs
     public List<UserResponse> toResponseList(List<User> users) {
         return users.stream()
                 .map(this::toResponse)
